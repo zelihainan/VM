@@ -11,12 +11,11 @@
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 1.5f, 7.0f));
+Camera camera(glm::vec3(0.0f, 1.5f, 10.0f));
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
 bool leftMousePressed = false;
-
 bool isPanning = false;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -123,7 +122,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     }
 }
 
-
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
@@ -158,7 +156,12 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     Shader shader(vertexShaderSource, fragmentShaderSource);
-    Model objectModel("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model1.obj");
+
+    Model model1("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model1.obj");
+    Model model2("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model2.obj");
+    Model model3("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model3.obj");
+    Model model4("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model4.obj");
+    Model model5("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model5.obj");
 
     while (!glfwWindowShouldClose(window))
     {
@@ -185,20 +188,18 @@ int main()
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
 
+        // Zemin çizimi
         glm::mat4 groundMat = glm::mat4(1.0f);
         shader.setMat4("model", groundMat);
         glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.2f, 0.2f, 0.35f);
 
         float groundVertices[] = {
-            -5.0f, 0.0f, -5.0f,
-             5.0f, 0.0f, -5.0f,
-             5.0f, 0.0f,  5.0f,
-            -5.0f, 0.0f,  5.0f
+            -10.0f, 0.0f, -5.0f,
+             10.0f, 0.0f, -5.0f,
+             10.0f, 0.0f,  5.0f,
+            -10.0f, 0.0f,  5.0f
         };
-        unsigned int groundIndices[] = {
-            0, 1, 2,
-            0, 2, 3
-        };
+        unsigned int groundIndices[] = { 0, 1, 2, 0, 2, 3 };
         unsigned int VAO, VBO, EBO;
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -214,12 +215,23 @@ int main()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
-        glm::mat4 objectMat = glm::mat4(1.0f);
-        objectMat = glm::translate(objectMat, glm::vec3(-1.5f, 1.0f, 0.0f));
-        objectMat = glm::scale(objectMat, glm::vec3(1.0f));
-        shader.setMat4("model", objectMat);
-        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
-        objectModel.Draw(shader);
+        // Objeleri sýrayla çiz
+        std::vector<std::pair<Model*, glm::vec3>> models = {
+            { &model1, glm::vec3(-6.0f, 1.2f, 0.0f) },
+            { &model2, glm::vec3(-3.0f, 1.2f, 0.0f) },
+            { &model3, glm::vec3(0.0f, 1.2f, 0.0f) },
+            { &model4, glm::vec3(3.0f, 1.2f, 0.0f) },
+            { &model5, glm::vec3(6.0f, 1.2f, 0.0f) }
+        };
+
+        for (auto& [model, pos] : models) {
+            glm::mat4 modelMat = glm::mat4(1.0f);
+            modelMat = glm::translate(modelMat, pos);
+            modelMat = glm::scale(modelMat, glm::vec3(1.0f));
+            shader.setMat4("model", modelMat);
+            glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
+            model->Draw(shader);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
