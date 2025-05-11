@@ -215,7 +215,7 @@ int main()
         glBindVertexArray(0);
 
         glm::mat4 objectMat = glm::mat4(1.0f);
-        objectMat = glm::translate(objectMat, glm::vec3(-1.5f, 0.75f, 0.0f));
+        objectMat = glm::translate(objectMat, glm::vec3(-1.5f, 1.0f, 0.0f));
         objectMat = glm::scale(objectMat, glm::vec3(1.0f));
         shader.setMat4("model", objectMat);
         glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
