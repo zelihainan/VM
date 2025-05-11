@@ -214,17 +214,17 @@ int main()
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-
-        // Objeleri sýrayla çiz
         std::vector<std::pair<Model*, glm::vec3>> models = {
-            { &model1, glm::vec3(-6.0f, 1.2f, 0.0f) },
-            { &model2, glm::vec3(-3.0f, 1.2f, 0.0f) },
-            { &model3, glm::vec3(0.0f, 1.2f, 0.0f) },
-            { &model4, glm::vec3(3.0f, 1.2f, 0.0f) },
-            { &model5, glm::vec3(6.0f, 1.2f, 0.0f) }
+                    { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
+                    { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
+                    { &model3, glm::vec3(0.0f, 0.52f, 0.0f) },
+                    { &model4, glm::vec3(3.0f, 1.1f, 0.0f) },
+                    { &model5, glm::vec3(6.0f, 0.4f, 0.0f) }
         };
 
-        for (auto& [model, pos] : models) {
+        for (size_t i = 0; i < models.size(); ++i) {
+            Model* model = models[i].first;
+            glm::vec3 pos = models[i].second;
             glm::mat4 modelMat = glm::mat4(1.0f);
             modelMat = glm::translate(modelMat, pos);
             modelMat = glm::scale(modelMat, glm::vec3(1.0f));
