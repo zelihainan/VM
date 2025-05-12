@@ -8,17 +8,19 @@
 #include "model.h"
 #include "camera.h"
 
-const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 600;
+const unsigned int INIT_WIDTH = 800;
+const unsigned int INIT_HEIGHT = 600;
 
 Camera camera(glm::vec3(0.0f, 1.5f, 10.0f));
-float lastX = WIDTH / 2.0f;
-float lastY = HEIGHT / 2.0f;
+float lastX = INIT_WIDTH / 2.0f;
+float lastY = INIT_HEIGHT / 2.0f;
 bool firstMouse = true;
 bool leftMousePressed = false;
 bool isPanning = false;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+glm::mat4 projection; // Global projection matrix
 
 const char* vertexShaderSource = R"(
 #version 330 core
@@ -76,6 +78,7 @@ void main()
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
@@ -125,7 +128,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
+
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 }
+
 
 int main()
 {
@@ -134,7 +142,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Virtual Museum", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, "Virtual Museum", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window\n";
@@ -163,6 +171,11 @@ int main()
     Model model4("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model4.obj");
     Model model5("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model5.obj");
 
+    // Ýlk projection hesaplamasý
+    int w, h;
+    glfwGetFramebufferSize(window, &w, &h);
+    projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)h, 0.1f, 100.0f);
+
     while (!glfwWindowShouldClose(window))
     {
         float currentFrame = glfwGetTime();
@@ -183,12 +196,10 @@ int main()
         glUniform3fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(lightColor));
 
         glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / HEIGHT, 0.1f, 100.0f);
-
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
 
-        // Zemin çizimi
+        // Zemin
         glm::mat4 groundMat = glm::mat4(1.0f);
         shader.setMat4("model", groundMat);
         glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.2f, 0.2f, 0.35f);
@@ -214,17 +225,16 @@ int main()
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
         std::vector<std::pair<Model*, glm::vec3>> models = {
-                    { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
-                    { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
-                    { &model3, glm::vec3(0.0f, 0.52f, 0.0f) },
-                    { &model4, glm::vec3(3.0f, 1.1f, 0.0f) },
-                    { &model5, glm::vec3(6.0f, 0.4f, 0.0f) }
+            { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
+            { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
+            { &model3, glm::vec3(0.0f, 0.52f, 0.0f) },
+            { &model4, glm::vec3(3.0f, 1.1f, 0.0f) },
+            { &model5, glm::vec3(6.0f, 0.4f, 0.0f) }
         };
 
-        for (size_t i = 0; i < models.size(); ++i) {
-            Model* model = models[i].first;
-            glm::vec3 pos = models[i].second;
+        for (auto& [model, pos] : models) {
             glm::mat4 modelMat = glm::mat4(1.0f);
             modelMat = glm::translate(modelMat, pos);
             modelMat = glm::scale(modelMat, glm::vec3(1.0f));
