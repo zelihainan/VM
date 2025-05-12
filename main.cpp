@@ -19,9 +19,9 @@ bool leftMousePressed = false;
 bool isPanning = false;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+glm::mat4 projection;
 
-glm::mat4 projection; // Global projection matrix
-
+// === Shader kaynaklarý ===
 const char* vertexShaderSource = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
@@ -61,7 +61,7 @@ uniform vec3 objectColor;
 
 void main()
 {
-    float ambientStrength = 0.4;
+    float ambientStrength = 0.7;
     vec3 ambient = ambientStrength * lightColor;
 
     vec3 norm = normalize(Normal);
@@ -75,6 +75,7 @@ void main()
 }
 )";
 
+// === Callback fonksiyonlarý ===
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -128,13 +129,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
-
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 }
 
-
+// === Ana Fonksiyon ===
 int main()
 {
     glfwInit();
@@ -165,67 +165,98 @@ int main()
 
     Shader shader(vertexShaderSource, fragmentShaderSource);
 
+    // 3D Objeler
     Model model1("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model1.obj");
     Model model2("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model2.obj");
     Model model3("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model3.obj");
     Model model4("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model4.obj");
     Model model5("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model5.obj");
 
-    // Ýlk projection hesaplamasý
+    // Ýlk projection
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)h, 0.1f, 100.0f);
 
+    // === Zemin ===
+    float groundVertices[] = {
+        -10.0f, 0.0f, -5.0f,  10.0f, 0.0f, -5.0f,  10.0f, 0.0f, 5.0f,  -10.0f, 0.0f, 5.0f
+    };
+    unsigned int groundIndices[] = { 0, 1, 2, 0, 2, 3 };
+
+    // === Duvarlar ve tavan ===
+    float wallVertices[] = {
+        // sol, sað, arka, ön, tavan
+        -10,0,-5, -10,5,-5, -10,5,5, -10,0,5,
+        10,0,-5, 10,5,-5, 10,5,5, 10,0,5,
+        -10,0,-5, 10,0,-5, 10,5,-5, -10,5,-5,
+        -10,0,5, 10,0,5, 10,5,5, -10,5,5,
+        -10,5,-5, 10,5,-5, 10,5,5, -10,5,5
+    };
+    unsigned int wallIndices[] = {
+    0,1,2, 0,2,3,   // Sol
+    4,5,6, 4,6,7,   // Sað
+    8,9,10, 8,10,11 // Arka
+    };
+
+
+    // VAO/VBO tanýmlarý
+    unsigned int VAO, VBO, EBO, wallVAO, wallVBO, wallEBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(groundVertices), groundVertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundIndices), groundIndices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glGenVertexArrays(1, &wallVAO);
+    glGenBuffers(1, &wallVBO);
+    glGenBuffers(1, &wallEBO);
+    glBindVertexArray(wallVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, wallVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(wallVertices), wallVertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, wallEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(wallIndices), wallIndices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // === Ana döngü ===
     while (!glfwWindowShouldClose(window))
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        glClearColor(0.08f, 0.08f, 0.1f, 1.0f);
+        glClearColor(0.7f, 0.7f, 0.75f, 1.0f); // iç mekan rengi
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();
 
-        glm::vec3 lightPos = glm::vec3(0.0f, 3.0f, 3.0f);
-        glm::vec3 viewPos = camera.Position;
-        glm::vec3 lightColor = glm::vec3(1.0f);
-
+        glm::vec3 lightPos = glm::vec3(0.0f, 4.9f, 0.0f);
         glUniform3fv(glGetUniformLocation(shader.ID, "lightPos"), 1, glm::value_ptr(lightPos));
-        glUniform3fv(glGetUniformLocation(shader.ID, "viewPos"), 1, glm::value_ptr(viewPos));
-        glUniform3fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(lightColor));
+        glUniform3fv(glGetUniformLocation(shader.ID, "viewPos"), 1, glm::value_ptr(camera.Position));
+        glUniform3fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f)));
 
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
 
-        // Zemin
-        glm::mat4 groundMat = glm::mat4(1.0f);
-        shader.setMat4("model", groundMat);
+        // Zemin çiz
+        shader.setMat4("model", glm::mat4(1.0f));
         glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.2f, 0.2f, 0.35f);
-
-        float groundVertices[] = {
-            -10.0f, 0.0f, -5.0f,
-             10.0f, 0.0f, -5.0f,
-             10.0f, 0.0f,  5.0f,
-            -10.0f, 0.0f,  5.0f
-        };
-        unsigned int groundIndices[] = { 0, 1, 2, 0, 2, 3 };
-        unsigned int VAO, VBO, EBO;
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(groundVertices), groundVertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundIndices), groundIndices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
 
+        // Duvar ve tavan çiz
+        shader.setMat4("model", glm::mat4(1.0f));
+        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.4f, 0.35f, 0.3f);
+        glBindVertexArray(wallVAO);
+        glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
+
+        // Objeleri çiz
         std::vector<std::pair<Model*, glm::vec3>> models = {
             { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
             { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
