@@ -107,6 +107,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+
+    if (ImGui::GetIO().WantCaptureMouse)
+        return;
+
     if (!leftMousePressed) {
         firstMouse = true;
         return;
