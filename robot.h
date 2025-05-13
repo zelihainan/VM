@@ -22,6 +22,11 @@ public:
         rotationY = glm::degrees(atan2(dir.x, dir.z));
     }
 
+    bool isNear(glm::vec3 target, float threshold = 1.0f) {
+        return glm::distance(position, target) < threshold;
+    }
+
+
     void draw(Shader& shader) {
         glm::mat4 modelMat = glm::mat4(1.0f);
         modelMat = glm::translate(modelMat, position);

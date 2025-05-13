@@ -150,17 +150,41 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 }
 
-void processInput(GLFWwindow* window, Robot& robot, float deltaTime)
+void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::vector<glm::vec3>& obstacles)
 {
+    glm::vec3 nextPos = robot.position;
+    float speed = deltaTime * 3.0f;
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        robot.position.z -= deltaTime * 3.0f;
+        nextPos.z -= speed;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        robot.position.z += deltaTime * 3.0f;
+        nextPos.z += speed;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        robot.position.x -= deltaTime * 3.0f;
+        nextPos.x -= speed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        robot.position.x += deltaTime * 3.0f;
+        nextPos.x += speed;
+
+    // Robot sýnýrlarý hesaba katýlarak dýþa çýkma engeli
+    float robotRadius = 1.2f;
+    if (nextPos.x < -10.0f + robotRadius || nextPos.x > 10.0f - robotRadius ||
+        nextPos.z < -5.0f + robotRadius || nextPos.z > 5.0f - robotRadius)
+        return;
+
+    // Obje çarpýþma kontrolü
+    for (const auto& obj : obstacles)
+    {
+        float dynamicThreshold = 1.5f;
+        if (obj.x < -5.0f || obj.x > 5.0f)
+            dynamicThreshold = 2.0f;
+
+        if (glm::distance(nextPos, obj) < dynamicThreshold)
+            return;
+    }
+
+    robot.position = nextPos;
 }
+
+
 
 int main()
 {
@@ -287,7 +311,7 @@ int main()
         ImGui::End();
 
         if (!autoMode)
-            processInput(window, robot, deltaTime);
+            processInput(window, robot, deltaTime, objectPositions);
         else {
             if (glm::distance(robot.position, objectPositions[currentTarget]) < 0.2f) {
                 currentTarget = (currentTarget + 1) % objectPositions.size();
