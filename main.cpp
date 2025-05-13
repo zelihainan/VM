@@ -155,9 +155,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::vector<glm::vec3>& obstacles)
 {
-
-
-
     glm::vec3 nextPos = robot.position;
     float speed = deltaTime * 5.0f;
 
@@ -171,24 +168,22 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
         nextPos.x += speed;
 
     // Sýnýrlardan dýþarý çýkmasýn
-    float robotRadius = 1.2f;
+    float robotRadius = 0.6f;
     if (nextPos.x < -10.0f + robotRadius || nextPos.x > 10.0f - robotRadius ||
         nextPos.z < -5.0f + robotRadius || nextPos.z > 5.0f - robotRadius)
         return;
 
-    // Model objeleriyle çarpýþma kontrolü
-    bool hitsObstacle = false;
+    // Obje çarpýþma kontrolü (manuel için)
     for (const auto& obj : obstacles)
     {
-        if (glm::distance(nextPos, obj) < 0.5f) {
-            hitsObstacle = true;
-            break;
-        }
+        float collisionRadius = 1.2f; // modelin kapladýðý alan
+        if (glm::distance(nextPos, obj) < collisionRadius)
+            return; // çok yaklaþtý, çarpýþma oldu
     }
 
-    if (!hitsObstacle)
-        robot.position = nextPos;
+    robot.position = nextPos;
 }
+
 
 
 
@@ -239,16 +234,15 @@ int main()
 
     Robot robot("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot.obj", glm::vec3(-5.0f, 0.0f, 2.5f));
 
-    std::cout << "Baþlangýç pozisyonu: " << robot.position.x << ", " << robot.position.z << std::endl;
-
 
     std::vector<glm::vec3> objectPositions = {
-    glm::vec3(-6.0f, 0.0f, 0.0f),
-    glm::vec3(-3.0f, 0.0f, 0.0f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(3.0f, 0.0f, 0.0f),
-    glm::vec3(6.0f, 0.0f, 0.0f)
+        glm::vec3(-6.0f, 0.0f, 0.0f),
+        glm::vec3(-3.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(3.0f, 0.0f, 0.0f),
+        glm::vec3(6.0f, 0.0f, 0.0f)
     };
+
     static int currentTarget = 0;
 
     std::vector<glm::vec3> fullPath = {
