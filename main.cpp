@@ -7,6 +7,10 @@
 #include "shaderClass.h"
 #include "model.h"
 #include "camera.h"
+#include "robot.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 const unsigned int INIT_WIDTH = 800;
 const unsigned int INIT_HEIGHT = 600;
@@ -142,7 +146,18 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 }
 
-// === Ana Fonksiyon ===
+void processInput(GLFWwindow* window, Robot& robot, float deltaTime)
+{
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        robot.position.z -= deltaTime * 3.0f;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        robot.position.z += deltaTime * 3.0f;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        robot.position.x -= deltaTime * 3.0f;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        robot.position.x += deltaTime * 3.0f;
+}
+
 int main()
 {
     glfwInit();
@@ -171,29 +186,43 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
     Shader shader(vertexShaderSource, fragmentShaderSource);
 
-    // 3D Objeler
     Model model1("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model1.obj");
     Model model2("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model2.obj");
     Model model3("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model3.obj");
     Model model4("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model4.obj");
     Model model5("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model5.obj");
 
-    // Ýlk projection
+    Robot robot("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot.obj", glm::vec3(0.0f, 0.0f, -3.0f));
+
+    std::vector<glm::vec3> objectPositions = {
+    glm::vec3(-6.0f, 0.0f, 0.0f),
+    glm::vec3(-3.0f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 0.0f, 0.0f),
+    glm::vec3(3.0f, 0.0f, 0.0f),
+    glm::vec3(6.0f, 0.0f, 0.0f)
+    };
+    static int currentTarget = 0;
+    static bool autoMode = false;
+
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)h, 0.1f, 100.0f);
 
-    // === Zemin ===
     float groundVertices[] = {
         -10.0f, 0.0f, -5.0f,  10.0f, 0.0f, -5.0f,  10.0f, 0.0f, 5.0f,  -10.0f, 0.0f, 5.0f
     };
     unsigned int groundIndices[] = { 0, 1, 2, 0, 2, 3 };
 
-    // === Duvarlar ve tavan ===
     float wallVertices[] = {
-        // sol, sað, arka, ön, tavan
         -10,0,-5, -10,5,-5, -10,5,5, -10,0,5,
         10,0,-5, 10,5,-5, 10,5,5, 10,0,5,
         -10,0,-5, 10,0,-5, 10,5,-5, -10,5,-5,
@@ -201,13 +230,11 @@ int main()
         -10,5,-5, 10,5,-5, 10,5,5, -10,5,5
     };
     unsigned int wallIndices[] = {
-    0,1,2, 0,2,3,   // Sol
-    4,5,6, 4,6,7,   // Sað
-    8,9,10, 8,10,11 // Arka
+        0,1,2, 0,2,3,
+        4,5,6, 4,6,7,
+        8,9,10, 8,10,11
     };
 
-
-    // VAO/VBO tanýmlarý
     unsigned int VAO, VBO, EBO, wallVAO, wallVBO, wallEBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -231,15 +258,38 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // === Ana döngü ===
     while (!glfwWindowShouldClose(window))
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        glClearColor(0.7f, 0.7f, 0.75f, 1.0f); // iç mekan rengi
+        glClearColor(0.7f, 0.7f, 0.75f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Robot Kontrol Paneli");
+        static bool autoMode = true;
+        ImGui::Checkbox("Auto Mode", &autoMode);
+        if (!autoMode) {
+            if (ImGui::Button("Left"))  robot.position.x -= deltaTime * 5.0f;
+            if (ImGui::Button("Right")) robot.position.x += deltaTime * 5.0f;
+            if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 5.0f;
+            if (ImGui::Button("Back")) robot.position.z += deltaTime * 5.0f;
+        }
+        ImGui::End();
+
+        if (!autoMode)
+            processInput(window, robot, deltaTime);
+        else {
+            if (glm::distance(robot.position, objectPositions[currentTarget]) < 0.2f) {
+                currentTarget = (currentTarget + 1) % objectPositions.size();
+            }
+            robot.moveTo(objectPositions[currentTarget], deltaTime * 2.0f);
+        }
 
         shader.use();
 
@@ -253,42 +303,47 @@ int main()
         shader.setMat4("projection", projection);
 
         std::vector<std::pair<Model*, glm::vec3>> models = {
-        { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
-        { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
-        { &model3, glm::vec3(0.0f, 0.52f, 0.0f) },
-        { &model4, glm::vec3(3.0f, 1.1f, 0.0f) },
-        { &model5, glm::vec3(6.0f, 0.4f, 0.0f) }
+            { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
+            { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
+            { &model3, glm::vec3(0.0f, 0.52f, 0.0f) },
+            { &model4, glm::vec3(3.0f, 1.1f, 0.0f) },
+            { &model5, glm::vec3(6.0f, 0.4f, 0.0f) }
         };
 
-        // Zemin çiz
         shader.setMat4("model", glm::mat4(1.0f));
-        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);  // Texture kullanma
-        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.6f, 0.6f, 0.6f); // gri zemin
+        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);
+        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.6f, 0.6f, 0.6f);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        // Duvar çiz
         shader.setMat4("model", glm::mat4(1.0f));
-        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);  // Texture kullanma
-        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.95f, 0.9f, 0.85f); // krem duvar
+        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);
+        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.95f, 0.9f, 0.85f);
         glBindVertexArray(wallVAO);
         glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
 
-        // Objeleri çiz
         for (auto& [model, pos] : models) {
             glm::mat4 modelMat = glm::mat4(1.0f);
             modelMat = glm::translate(modelMat, pos);
             modelMat = glm::scale(modelMat, glm::vec3(1.0f));
             shader.setMat4("model", modelMat);
-            glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), true);  // Texture kullan
+            glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), true);
             glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
             model->Draw(shader);
         }
 
+        robot.draw(shader);
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glfwTerminate();
     return 0;
