@@ -56,8 +56,9 @@ in vec2 TexCoord;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform vec3 lightColor;
-uniform sampler2D texture_diffuse1;
 uniform vec3 objectColor;
+uniform sampler2D texture_diffuse1;
+uniform bool useTexture;
 
 void main()
 {
@@ -69,11 +70,18 @@ void main()
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
 
-    vec3 result = (ambient + diffuse);
-    vec4 texColor = texture(texture_diffuse1, TexCoord);
-    FragColor = vec4(result, 1.0) * texColor;
+    vec3 lighting = (ambient + diffuse);
+
+    vec4 baseColor;
+    if (useTexture)
+        baseColor = texture(texture_diffuse1, TexCoord);
+    else
+        baseColor = vec4(objectColor, 1.0);
+
+    FragColor = vec4(lighting, 1.0) * baseColor;
 }
 )";
+
 
 // === Callback fonksiyonlarý ===
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -244,35 +252,39 @@ int main()
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
 
+        std::vector<std::pair<Model*, glm::vec3>> models = {
+        { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
+        { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
+        { &model3, glm::vec3(0.0f, 0.52f, 0.0f) },
+        { &model4, glm::vec3(3.0f, 1.1f, 0.0f) },
+        { &model5, glm::vec3(6.0f, 0.4f, 0.0f) }
+        };
+
         // Zemin çiz
         shader.setMat4("model", glm::mat4(1.0f));
-        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.2f, 0.2f, 0.35f);
+        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);  // Texture kullanma
+        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.6f, 0.6f, 0.6f); // gri zemin
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        // Duvar ve tavan çiz
+        // Duvar çiz
         shader.setMat4("model", glm::mat4(1.0f));
-        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.4f, 0.35f, 0.3f);
+        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);  // Texture kullanma
+        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.95f, 0.9f, 0.85f); // krem duvar
         glBindVertexArray(wallVAO);
         glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
 
         // Objeleri çiz
-        std::vector<std::pair<Model*, glm::vec3>> models = {
-            { &model1, glm::vec3(-6.0f, 1.1f, 0.0f) },
-            { &model2, glm::vec3(-3.0f, 1.0f, 0.0f) },
-            { &model3, glm::vec3(0.0f, 0.52f, 0.0f) },
-            { &model4, glm::vec3(3.0f, 1.1f, 0.0f) },
-            { &model5, glm::vec3(6.0f, 0.4f, 0.0f) }
-        };
-
         for (auto& [model, pos] : models) {
             glm::mat4 modelMat = glm::mat4(1.0f);
             modelMat = glm::translate(modelMat, pos);
             modelMat = glm::scale(modelMat, glm::vec3(1.0f));
             shader.setMat4("model", modelMat);
+            glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), true);  // Texture kullan
             glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
             model->Draw(shader);
         }
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
