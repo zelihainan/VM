@@ -3,35 +3,46 @@ out vec4 FragColor;
 
 in vec3 FragPos;
 in vec3 Normal;
-in vec2 TexCoord;
 
-uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform vec3 lightColor;
 uniform vec3 objectColor;
-uniform sampler2D texture_diffuse1;
 uniform bool useTexture;
+uniform sampler2D texture_diffuse1;
+
+// 5 spotlight pozisyonu ve yönü
+uniform vec3 spotLights[5];
+uniform vec3 spotDirs[5];
+uniform float intensities[5];
 
 void main()
 {
-    // Ambient
+    vec3 norm = normalize(Normal);
+    vec3 lighting = vec3(0.0);
+
+    for (int i = 0; i < 5; ++i)
+    {
+        // Spot ýþýk yönü
+        vec3 lightDir = normalize(spotLights[i] - FragPos);
+
+        // Diffuse hesapla
+        float diff = max(dot(norm, lightDir), 0.0);
+
+        // Spotlight etkisini yoðunlukla çarp
+        lighting += diff * intensities[i] * lightColor;
+    }
+
+    // Ambient light sabit
     float ambientStrength = 0.2;
     vec3 ambient = ambientStrength * lightColor;
+    lighting += ambient;
 
-    // Diffuse 
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
-
-    // Texture veya objectColor seçimi
+    // Doku kullanýmý kontrolü
     vec4 baseColor;
     if (useTexture)
-        baseColor = texture(texture_diffuse1, TexCoord);
+        baseColor = texture(texture_diffuse1, vec2(FragPos.x, FragPos.z));
     else
         baseColor = vec4(objectColor, 1.0);
 
-    // Final renklendirme
-    vec3 lighting = ambient + diffuse;
     FragColor = vec4(lighting, 1.0) * baseColor;
 }

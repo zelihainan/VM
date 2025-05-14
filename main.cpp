@@ -51,7 +51,6 @@ void main()
     gl_Position = projection * view * vec4(FragPos, 1.0);
 }
 )";
-
 const char* fragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
@@ -60,34 +59,46 @@ in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoord;
 
-uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform vec3 lightColor;
 uniform vec3 objectColor;
 uniform sampler2D texture_diffuse1;
 uniform bool useTexture;
 
+uniform vec3 spotLights[5];
+uniform vec3 spotDirs[5];
+uniform float intensities[5];
+
+const float cutOff = cos(radians(20.0)); // Spotlight açısı (dar)
+
 void main()
 {
-    float ambientStrength = 0.7;
-    vec3 ambient = ambientStrength * lightColor;
-
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 result = vec3(0.0);
 
-    vec3 lighting = (ambient + diffuse);
+    for (int i = 0; i < 5; ++i)
+    {
+        vec3 lightDir = normalize(spotLights[i] - FragPos);
+        float theta = dot(lightDir, normalize(-spotDirs[i]));
 
-    vec4 baseColor;
-    if (useTexture)
-        baseColor = texture(texture_diffuse1, TexCoord);
-    else
-        baseColor = vec4(objectColor, 1.0);
+        if (theta > cutOff) {
+            float diff = max(dot(norm, lightDir), 0.0);
+            result += diff * intensities[i] * lightColor;
+        }
+    }
 
-    FragColor = vec4(lighting, 1.0) * baseColor;
+    // Ambient light sabit (çok düşük)
+    result += 0.5 * lightColor;
+
+    vec4 baseColor = useTexture
+        ? texture(texture_diffuse1, TexCoord)
+        : vec4(objectColor, 1.0);
+
+    FragColor = vec4(result, 1.0) * baseColor;
 }
 )";
+
+
 
 
 // === Callback fonksiyonları ===
@@ -251,6 +262,15 @@ int main()
     static bool showInfoPopup = false;
     static float popupTimer = 0.0f;
     static int lastScannedIndex = -1;
+
+    std::vector<glm::vec3> spotlightPositions = {
+    glm::vec3(-6.0f, 3.0f, 0.0f),
+    glm::vec3(-3.0f, 3.0f, 0.0f),
+    glm::vec3(0.0f, 3.0f, 0.0f),
+    glm::vec3(3.0f, 3.0f, 0.0f),
+    glm::vec3(6.0f, 3.0f, 0.0f)
+    };
+    glm::vec3 spotlightDirection = glm::vec3(0.0f, -1.0f, 0.0f);
 
     Shader shader(vertexShaderSource, fragmentShaderSource);
 
@@ -433,9 +453,31 @@ int main()
 
         shader.use();
 
+        // --- Spotlight sistemi ---
+        // Hepsi dim (düşük ışık) başlasın
+        std::vector<float> intensities(5, 0.2f);
 
-        glm::vec3 lightPos = glm::vec3(0.0f, 4.9f, 0.0f);
-        glUniform3fv(glGetUniformLocation(shader.ID, "lightPos"), 1, glm::value_ptr(lightPos));
+        // Robot yakındaysa sadece o modelin spot'u parlak olsun
+        for (int i = 0; i < objectPositions.size(); ++i) {
+            float distance = glm::distance(robot.position, objectPositions[i]);
+            if (distance < 2.0f) {
+                intensities[i] = 2.5f; // yakındaki spot daha parlak
+            }
+        }
+
+        // Spot ışıklarını shader'a gönder
+        for (int i = 0; i < 5; ++i) {
+            std::string posName = "spotLights[" + std::to_string(i) + "]";
+            std::string dirName = "spotDirs[" + std::to_string(i) + "]";
+            std::string intensityName = "intensities[" + std::to_string(i) + "]";
+
+            glUniform3fv(glGetUniformLocation(shader.ID, posName.c_str()), 1, glm::value_ptr(spotlightPositions[i]));
+            glUniform3fv(glGetUniformLocation(shader.ID, dirName.c_str()), 1, glm::value_ptr(spotlightDirection));
+            glUniform1f(glGetUniformLocation(shader.ID, intensityName.c_str()), intensities[i]);
+        }
+
+
+
         glUniform3fv(glGetUniformLocation(shader.ID, "viewPos"), 1, glm::value_ptr(camera.Position));
         glUniform3fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f)));
 
