@@ -51,6 +51,8 @@ void main()
     gl_Position = projection * view * vec4(FragPos, 1.0);
 }
 )";
+
+
 const char* fragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
@@ -69,13 +71,19 @@ uniform vec3 spotLights[5];
 uniform vec3 spotDirs[5];
 uniform float intensities[5];
 
-const float cutOff = cos(radians(20.0)); // Spotlight açısı (dar)
+uniform vec3 pointLights[2];
+uniform float pointIntensities[2];
+uniform vec3 pointColors[2];
+
+
+const float cutOff = cos(radians(20.0)); // Spotlight açısı
 
 void main()
 {
     vec3 norm = normalize(Normal);
     vec3 result = vec3(0.0);
 
+    // --- SPOTLIGHT etkisi ---
     for (int i = 0; i < 5; ++i)
     {
         vec3 lightDir = normalize(spotLights[i] - FragPos);
@@ -87,9 +95,18 @@ void main()
         }
     }
 
-    // Ambient light sabit (çok düşük)
-    result += 0.5 * lightColor;
+    // --- POINT LIGHT etkisi ---
+    for (int i = 0; i < 2; ++i)
+    {
+        vec3 lightDir = normalize(pointLights[i] - FragPos);
+        float diff = max(dot(norm, lightDir), 0.0);
+        result += diff * pointIntensities[i] * pointColors[i];
+    }
 
+    // --- Ambient ışık (sabit, ortam aydınlatması) ---
+    result += 0.15 * lightColor;
+
+    // --- Renk hesaplama ---
     vec4 baseColor = useTexture
         ? texture(texture_diffuse1, TexCoord)
         : vec4(objectColor, 1.0);
@@ -97,6 +114,7 @@ void main()
     FragColor = vec4(result, 1.0) * baseColor;
 }
 )";
+
 
 
 
@@ -270,6 +288,20 @@ int main()
     glm::vec3(3.0f, 3.0f, 0.0f),
     glm::vec3(6.0f, 3.0f, 0.0f)
     };
+
+    std::vector<glm::vec3> pointLights = {
+    glm::vec3(-9.0f, 1.0f, 4.0f),   // sol arka köşe
+    glm::vec3(9.0f, 1.0f, 4.0f)     // sağ arka köşe
+    };
+
+    std::vector<glm::vec3> pointColors = {
+    glm::vec3(1.0f, 1.0f, 1.0f),  // Light 1 color (beyaz)
+    glm::vec3(1.0f, 1.0f, 1.0f)   // Light 2 color (beyaz)
+    };
+
+
+    std::vector<float> pointIntensities = { 0.7f, 0.7f }; // Başlangıç ışık yoğunlukları
+
     glm::vec3 spotlightDirection = glm::vec3(0.0f, -1.0f, 0.0f);
 
     Shader shader(vertexShaderSource, fragmentShaderSource);
@@ -375,6 +407,16 @@ int main()
             if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 5.0f;
             if (ImGui::Button("Back")) robot.position.z += deltaTime * 5.0f;
         }
+        ImGui::Separator();
+        ImGui::Text("Point Light Kontrol");
+
+        ImGui::SliderFloat("Light 1 Intensity", &pointIntensities[0], 0.0f, 3.0f);
+        ImGui::SliderFloat("Light 2 Intensity", &pointIntensities[1], 0.0f, 3.0f);
+
+        ImGui::ColorEdit3("Light 1 Color", glm::value_ptr(pointColors[0]));
+        ImGui::ColorEdit3("Light 2 Color", glm::value_ptr(pointColors[1]));
+
+
         ImGui::End();
 
         if (showInfoPopup && lastScannedIndex >= 0 && lastScannedIndex < modelInfoTexts.size()) {
@@ -514,6 +556,21 @@ int main()
             glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
             model->Draw(shader);
         }
+
+        for (int i = 0; i < 2; ++i) {
+            std::string lightName = "pointLights[" + std::to_string(i) + "]";
+            glUniform3fv(glGetUniformLocation(shader.ID, lightName.c_str()), 1, glm::value_ptr(pointLights[i]));
+
+            std::string intensityName = "pointIntensities[" + std::to_string(i) + "]";
+            glUniform1f(glGetUniformLocation(shader.ID, intensityName.c_str()), pointIntensities[i]);
+        }
+        for (int i = 0; i < 2; ++i) {
+            std::string colorName = "pointColors[" + std::to_string(i) + "]";
+            glUniform3fv(glGetUniformLocation(shader.ID, colorName.c_str()), 1, glm::value_ptr(pointColors[i]));
+        }
+
+
+
 
         robot.draw(shader);
 
