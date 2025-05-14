@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+ï»¿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -25,10 +25,10 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 glm::mat4 projection;
 
-bool autoMode = false; // global taným
+bool autoMode = false; // global tanÄ±m
 
 
-// === Shader kaynaklarý ===
+// === Shader kaynaklarÄ± ===
 const char* vertexShaderSource = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
@@ -90,7 +90,7 @@ void main()
 )";
 
 
-// === Callback fonksiyonlarý ===
+// === Callback fonksiyonlarÄ± ===
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -167,22 +167,30 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         nextPos.x += speed;
 
-    // Sýnýrlardan dýþarý çýkmasýn
+    // SÄ±nÄ±rlardan dÄ±ÅŸarÄ± Ã§Ä±kmasÄ±n
     float robotRadius = 0.6f;
     if (nextPos.x < -10.0f + robotRadius || nextPos.x > 10.0f - robotRadius ||
         nextPos.z < -5.0f + robotRadius || nextPos.z > 5.0f - robotRadius)
         return;
 
-    // Obje çarpýþma kontrolü (manuel için)
+    // Obje Ã§arpÄ±ÅŸma kontrolÃ¼ (manuel iÃ§in)
     for (const auto& obj : obstacles)
     {
-        float collisionRadius = 1.2f; // modelin kapladýðý alan
+        float collisionRadius = 1.2f; // modelin kapladÄ±ÄŸÄ± alan
         if (glm::distance(nextPos, obj) < collisionRadius)
-            return; // çok yaklaþtý, çarpýþma oldu
+            return; // Ã§ok yaklaÅŸtÄ±, Ã§arpÄ±ÅŸma oldu
     }
 
     robot.position = nextPos;
 }
+
+std::vector<std::string> modelInfoTexts = {
+    "Model 1: Akhilleus Lahdi - M.Ã–. 3. yy, Roma dÃ¶nemi",
+    "Model 2: Athena Heykeli - M.Ã–. 5. yy, Yunan dÃ¶nemi",
+    "Model 3: Lahit ParÃ§asÄ± - M.S. 2. yy, Roma dÃ¶nemi",
+    "Model 4: Sfenks Heykeli - Antik MÄ±sÄ±r dÃ¶nemi",
+    "Model 5: YazÄ±tlÄ± TaÅŸ - Antik Lidya dÃ¶nemi"
+};
 
 
 
@@ -224,6 +232,10 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    static bool showInfoPopup = false;
+    static float popupTimer = 0.0f;
+    static int lastScannedIndex = -1;
+
     Shader shader(vertexShaderSource, fragmentShaderSource);
 
     Model model1("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model1.obj");
@@ -246,13 +258,13 @@ int main()
     static int currentTarget = 0;
 
     std::vector<glm::vec3> fullPath = {
-        glm::vec3(-6.0f, 0.0f, 4.0f),  // Baþlangýç
-        glm::vec3(-6.0f, 0.0f, 1.2f),  // Model 1 önü
-        glm::vec3(-3.0f, 0.0f, 1.2f),  // Model 2 önü
-        glm::vec3(0.0f, 0.0f, 1.2f),   // Model 3 önü
-        glm::vec3(3.0f, 0.0f, 1.2f),   // Model 4 önü
-        glm::vec3(6.0f, 0.0f, 1.2f),   // Model 5 önü
-        glm::vec3(-6.0f, 0.0f, 4.0f)   // Geri dönüþ
+        glm::vec3(-5.0f, 0.0f, 2.5f),  // BaÅŸlangÄ±Ã§
+        glm::vec3(-6.0f, 0.0f, 1.2f),  // Model 1 Ã¶nÃ¼
+        glm::vec3(-3.0f, 0.0f, 1.2f),  // Model 2 Ã¶nÃ¼
+        glm::vec3(0.0f, 0.0f, 1.2f),   // Model 3 Ã¶nÃ¼
+        glm::vec3(3.0f, 0.0f, 1.2f),   // Model 4 Ã¶nÃ¼
+        glm::vec3(6.0f, 0.0f, 1.2f),   // Model 5 Ã¶nÃ¼
+        glm::vec3(-5.0f, 0.0f, 2.5f)   // Geri dÃ¶nÃ¼ÅŸ
     };
 
 
@@ -329,6 +341,23 @@ int main()
         }
         ImGui::End();
 
+        if (showInfoPopup) {
+    ImGui::SetNextWindowSize(ImVec2(400, 100), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);
+
+    ImGui::Begin("Model Bilgisi", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    ImGui::TextWrapped("%s", modelInfoTexts[lastScannedIndex].c_str());
+    ImGui::End();
+
+    popupTimer += deltaTime;
+    if (popupTimer >= 3.0f) {
+        showInfoPopup = false;
+    }
+}
+
+
+
+
         if (!autoMode) {
             processInput(window, robot, deltaTime, objectPositions);
         }
@@ -338,9 +367,19 @@ int main()
             glm::vec3 target = fullPath[pathIndex];
 
             if (!isWaiting) {
-                if (glm::distance(robot.position, target) < 0.2f) {
+                glm::vec3 target = fullPath[pathIndex];
+
+                float dist = glm::distance(robot.position, target);
+
+                if (dist < 0.2f) {
                     isWaiting = true;
                     waitTimer = 0.0f;
+
+                    if (pathIndex > 0 && pathIndex <= 5) {
+                        lastScannedIndex = pathIndex - 1;
+                        showInfoPopup = true;
+                        popupTimer = 0.0f;
+                    }
                 }
                 else {
                     glm::vec3 direction = glm::normalize(target - robot.position);
@@ -350,7 +389,6 @@ int main()
                     bool inBounds = nextPos.x >= -10.0f + robotRadius && nextPos.x <= 10.0f - robotRadius &&
                         nextPos.z >= -5.0f + robotRadius && nextPos.z <= 5.0f - robotRadius;
 
-                    // !!! EN ÖNEMLÝ NOKTA: SADECE HEDEF DIÞI OBJE ÇARPISMASINI ENGELLE
                     bool hitsObject = false;
                     for (const auto& obj : fullPath) {
                         if (glm::distance(nextPos, obj) < 1.2f && glm::distance(obj, target) > 0.05f) {
@@ -359,16 +397,21 @@ int main()
                         }
                     }
 
-                    robot.moveTo(target, deltaTime * 2.0f);
-                    // else: hiçbir þey yapma (engel var)
+                    if (inBounds) {
+                        robot.moveTo(target, deltaTime * 2.0f);
+                    }
                 }
             }
-
             else {
                 waitTimer += deltaTime;
+
                 if (waitTimer >= 3.0f) {
                     isWaiting = false;
-                    pathIndex = (pathIndex + 1) % fullPath.size();
+                    pathIndex++;
+
+                    if (pathIndex >= fullPath.size()) {
+                        pathIndex = 0; // yeniden baÅŸla
+                    }
                 }
             }
         }
