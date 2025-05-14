@@ -185,13 +185,12 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
 }
 
 std::vector<std::string> modelInfoTexts = {
-    "Model 1: Akhilleus Lahdi - M.Ö. 3. yy, Roma dönemi",
-    "Model 2: Athena Heykeli - M.Ö. 5. yy, Yunan dönemi",
-    "Model 3: Lahit Parçası - M.S. 2. yy, Roma dönemi",
-    "Model 4: Sfenks Heykeli - Antik Mısır dönemi",
-    "Model 5: Yazıtlı Taş - Antik Lidya dönemi"
+    u8"Kadın Portre Steli – Roma Dönemi, M.S. 2. yüzyıl Bu küçük boyutlu mezar steli, muhtemelen yerel bir Roma vatandaşına ait olup M.S. 2. yüzyıla tarihlenmektedir.Üzerinde kadın figürü yarım kabartma şeklinde yer alır; başı örtülü, göğsünde fibula(giysi tokası) olan sade ama anlam yüklü bir betimleme sunar.Üstteki üçgen alınlık kısmında sembolik bezemeler bulunur.Bu tür steller, Roma dönemi Anadolu’sunda kadınların sosyal kimliğini, ailevi bağlarını ve inanç sistemini yansıtan önemli belgelerdir.",
+    u8"Erkek Heykeli – Roma Dönemi, M.S. 2. yüzyıl Bu tunç heykel, Roma İmparatorluğu'nun yüksek sanat anlayışını temsil eden, Toga giymiş bir erkek yurttaşı betimler. M.S. 2. yüzyıla tarihlenen bu eser, özellikle portre detaylarındaki gerçekçilikle dikkat çeker. Togası, dönemin sosyal statüsünü simgelerken, sağ eliyle tuttuğu belge ya da rulo figürü onun entelektüel ya da siyasal bir kimliği olabileceğini düşündürür. Bu tip heykeller, Roma kentlerinin kamu alanlarında imparatorluk değerlerini ve vatandaşlık bilincini yansıtmak için sergilenmiştir.",
+    u8"Filozoflar Lahdi – M.S. 3. yüzyıl, Roma Dönemi Bu mermer lahit, stoacı düşünce ve felsefi yaşamı simgeleyen figürlerle bezelidir.Lahdin uzun yüzeylerinde toga giymiş filozoflar ellerinde kitap, papirüs veya düşünür pozlarında gösterilmiştir.Bu tasvirler, ölen kişinin entelektüel bir yaşamı benimsediğini ve ölümden sonra da bilgelik içinde anılmak istendiğini ifade eder.Yazıtlarında Yunanca kitabeler yer alır.Bu tip lahitler, özellikle Roma İmparatorluğu’nun doğu eyaletlerinde seçkin sınıflar arasında yaygındı.",
+    u8"Arabalı Tanrı Tarhunda (Fırtına Tanrısı) – Geç Hitit Dönemi, M.Ö. 9. yüzyıl Tarhunda, Anadolu'nun Geç Hitit dönemine ait en önemli tanrılarından biridir. Bu anıtsal taş heykel, Tarhunda’yı bir savaş arabası üzerinde iki boğa tarafından çekilirken tasvir eder. Tanrı’nın sağ elindeki balta ve sol elindeki yıldırım demeti, onun gök gürültüsü, savaş ve bereketle ilişkilendirilen doğasını simgeler. M.Ö. 9. yüzyıla tarihlenen bu eser, özellikle Arslantaş (eski Kummuh Krallığı) bölgesinden çıkarılmıştır ve Geç Hitit sanatının görkemli bir örneğidir.",
+    u8"Akhilleus Lahdi – M.S. 2. yüzyıl, Roma Dönemi Akhilleus Lahdi, Troya Savaşı’nın kahramanı Akhilleus’un yaşamından sahnelerle süslenmiş yüksek kabartmalı bir mezar anıtıdır.M.S. 2. yüzyılda yapılmış olan bu lahit, ölen kişinin kahramanlıkla özdeşleştirilmek istendiğini gösterir.Lahdin bir yüzünde Akhilleus’un Briseis’i Agamemnon’a teslim edişi, diğer yüzlerde ise cenaze töreni ve savaş sahneleri yer alır.Mitolojik betimlemeleriyle yalnızca sanatsal değil, aynı zamanda simgesel anlatımıyla da dikkat çeker."
 };
-
 
 
 
@@ -228,6 +227,23 @@ int main()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    static const ImWchar turkish_range[] = {
+        0x0020, 0x00FF, // Latin-1
+        0x011E, 0x011F, // Ğğ
+        0x0130, 0x0131, // İı
+        0x015E, 0x015F, // Şş
+        0
+    };
+
+    ImFontConfig font_cfg;
+    font_cfg.OversampleH = 3;
+    font_cfg.OversampleV = 1;
+    font_cfg.PixelSnapH = true;
+
+    io.FontDefault = io.Fonts->AddFontFromFileTTF(
+        "C:\\Users\\zeliha\\source\\repos\\Project1\\x64\\Debug\\fonts\\OpenSans-Regular.ttf", 16.0f, &font_cfg, turkish_range);
+
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
@@ -342,7 +358,7 @@ int main()
         ImGui::End();
 
         if (showInfoPopup) {
-    ImGui::SetNextWindowSize(ImVec2(400, 100), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(500, 200), ImGuiCond_Always);
     ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);
 
     ImGui::Begin("Model Bilgisi", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
