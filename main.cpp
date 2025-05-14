@@ -185,11 +185,11 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
 }
 
 std::vector<std::string> modelInfoTexts = {
-    u8"Kadın Portre Steli – Roma Dönemi, M.S. 2. yüzyıl Bu küçük boyutlu mezar steli, muhtemelen yerel bir Roma vatandaşına ait olup M.S. 2. yüzyıla tarihlenmektedir.Üzerinde kadın figürü yarım kabartma şeklinde yer alır; başı örtülü, göğsünde fibula(giysi tokası) olan sade ama anlam yüklü bir betimleme sunar.Üstteki üçgen alınlık kısmında sembolik bezemeler bulunur.Bu tür steller, Roma dönemi Anadolu’sunda kadınların sosyal kimliğini, ailevi bağlarını ve inanç sistemini yansıtan önemli belgelerdir.",
-    u8"Erkek Heykeli – Roma Dönemi, M.S. 2. yüzyıl Bu tunç heykel, Roma İmparatorluğu'nun yüksek sanat anlayışını temsil eden, Toga giymiş bir erkek yurttaşı betimler. M.S. 2. yüzyıla tarihlenen bu eser, özellikle portre detaylarındaki gerçekçilikle dikkat çeker. Togası, dönemin sosyal statüsünü simgelerken, sağ eliyle tuttuğu belge ya da rulo figürü onun entelektüel ya da siyasal bir kimliği olabileceğini düşündürür. Bu tip heykeller, Roma kentlerinin kamu alanlarında imparatorluk değerlerini ve vatandaşlık bilincini yansıtmak için sergilenmiştir.",
-    u8"Filozoflar Lahdi – M.S. 3. yüzyıl, Roma Dönemi Bu mermer lahit, stoacı düşünce ve felsefi yaşamı simgeleyen figürlerle bezelidir.Lahdin uzun yüzeylerinde toga giymiş filozoflar ellerinde kitap, papirüs veya düşünür pozlarında gösterilmiştir.Bu tasvirler, ölen kişinin entelektüel bir yaşamı benimsediğini ve ölümden sonra da bilgelik içinde anılmak istendiğini ifade eder.Yazıtlarında Yunanca kitabeler yer alır.Bu tip lahitler, özellikle Roma İmparatorluğu’nun doğu eyaletlerinde seçkin sınıflar arasında yaygındı.",
-    u8"Arabalı Tanrı Tarhunda (Fırtına Tanrısı) – Geç Hitit Dönemi, M.Ö. 9. yüzyıl Tarhunda, Anadolu'nun Geç Hitit dönemine ait en önemli tanrılarından biridir. Bu anıtsal taş heykel, Tarhunda’yı bir savaş arabası üzerinde iki boğa tarafından çekilirken tasvir eder. Tanrı’nın sağ elindeki balta ve sol elindeki yıldırım demeti, onun gök gürültüsü, savaş ve bereketle ilişkilendirilen doğasını simgeler. M.Ö. 9. yüzyıla tarihlenen bu eser, özellikle Arslantaş (eski Kummuh Krallığı) bölgesinden çıkarılmıştır ve Geç Hitit sanatının görkemli bir örneğidir.",
-    u8"Akhilleus Lahdi – M.S. 2. yüzyıl, Roma Dönemi Akhilleus Lahdi, Troya Savaşı’nın kahramanı Akhilleus’un yaşamından sahnelerle süslenmiş yüksek kabartmalı bir mezar anıtıdır.M.S. 2. yüzyılda yapılmış olan bu lahit, ölen kişinin kahramanlıkla özdeşleştirilmek istendiğini gösterir.Lahdin bir yüzünde Akhilleus’un Briseis’i Agamemnon’a teslim edişi, diğer yüzlerde ise cenaze töreni ve savaş sahneleri yer alır.Mitolojik betimlemeleriyle yalnızca sanatsal değil, aynı zamanda simgesel anlatımıyla da dikkat çeker."
+    u8"Kadın Portre Steli  Roma Dönemi, M.S. 2. yüzyıl Bu küçük boyutlu mezar steli, muhtemelen yerel bir Roma vatandaşına ait olup M.S. 2. yüzyıla tarihlenmektedir.Üzerinde kadın figürü yarım kabartma şeklinde yer alır; başı örtülü, göğsünde fibula(giysi tokası) olan sade ama anlam yüklü bir betimleme sunar.Üstteki üçgen alınlık kısmında sembolik bezemeler bulunur.Bu tür steller, Roma dönemi Anadolu’sunda kadınların sosyal kimliğini, ailevi bağlarını ve inanç sistemini yansıtan önemli belgelerdir.",
+    u8"Erkek Heykeli  Roma Dönemi, M.S. 2. yüzyıl Bu tunç heykel, Roma İmparatorluğu'nun yüksek sanat anlayışını temsil eden, Toga giymiş bir erkek yurttaşı betimler. M.S. 2. yüzyıla tarihlenen bu eser, özellikle portre detaylarındaki gerçekçilikle dikkat çeker. Togası, dönemin sosyal statüsünü simgelerken, sağ eliyle tuttuğu belge ya da rulo figürü onun entelektüel ya da siyasal bir kimliği olabileceğini düşündürür. Bu tip heykeller, Roma kentlerinin kamu alanlarında imparatorluk değerlerini ve vatandaşlık bilincini yansıtmak için sergilenmiştir.",
+    u8"Filozoflar Lahdi  M.S. 3. yüzyıl, Roma Dönemi Bu mermer lahit, stoacı düşünce ve felsefi yaşamı simgeleyen figürlerle bezelidir.Lahdin uzun yüzeylerinde toga giymiş filozoflar ellerinde kitap, papirüs veya düşünür pozlarında gösterilmiştir.Bu tasvirler, ölen kişinin entelektüel bir yaşamı benimsediğini ve ölümden sonra da bilgelik içinde anılmak istendiğini ifade eder.Yazıtlarında Yunanca kitabeler yer alır.Bu tip lahitler, özellikle Roma İmparatorluğu’nun doğu eyaletlerinde seçkin sınıflar arasında yaygındı.",
+    u8"Arabalı Tanrı Tarhunda (Fırtına Tanrısı)  Geç Hitit Dönemi, M.Ö. 9. yüzyıl Tarhunda, Anadolu'nun Geç Hitit dönemine ait en önemli tanrılarından biridir. Bu anıtsal taş heykel, Tarhunda’yı bir savaş arabası üzerinde iki boğa tarafından çekilirken tasvir eder. Tanrı’nın sağ elindeki balta ve sol elindeki yıldırım demeti, onun gök gürültüsü, savaş ve bereketle ilişkilendirilen doğasını simgeler. M.Ö. 9. yüzyıla tarihlenen bu eser, özellikle Arslantaş (eski Kummuh Krallığı) bölgesinden çıkarılmıştır ve Geç Hitit sanatının görkemli bir örneğidir.",
+    u8"Akhilleus Lahdi  M.S. 2. yüzyıl, Roma Dönemi Akhilleus Lahdi, Troya Savaşı’nın kahramanı Akhilleus’un yaşamından sahnelerle süslenmiş yüksek kabartmalı bir mezar anıtıdır.M.S. 2. yüzyılda yapılmış olan bu lahit, ölen kişinin kahramanlıkla özdeşleştirilmek istendiğini gösterir.Lahdin bir yüzünde Akhilleus’un Briseis’i Agamemnon’a teslim edişi, diğer yüzlerde ise cenaze töreni ve savaş sahneleri yer alır.Mitolojik betimlemeleriyle yalnızca sanatsal değil, aynı zamanda simgesel anlatımıyla da dikkat çeker."
 };
 
 
@@ -357,34 +357,36 @@ int main()
         }
         ImGui::End();
 
-        if (showInfoPopup) {
-    ImGui::SetNextWindowSize(ImVec2(500, 200), ImGuiCond_Always);
-    ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);
+        if (showInfoPopup && lastScannedIndex >= 0 && lastScannedIndex < modelInfoTexts.size()) {
+            ImGui::SetNextWindowSize(ImVec2(500, 200), ImGuiCond_Always);
+            ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);
 
-    ImGui::Begin("Model Bilgisi", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-    ImGui::TextWrapped("%s", modelInfoTexts[lastScannedIndex].c_str());
-    ImGui::End();
-
-    popupTimer += deltaTime;
-    if (popupTimer >= 3.0f) {
-        showInfoPopup = false;
-    }
-}
-
-
-
+            ImGui::Begin("Model Bilgisi", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+            ImGui::TextWrapped("%s", modelInfoTexts[lastScannedIndex].c_str());
+            ImGui::End();
+        }
 
         if (!autoMode) {
             processInput(window, robot, deltaTime, objectPositions);
+
+            bool found = false;
+            for (int i = 0; i < objectPositions.size(); ++i) {
+                if (glm::distance(robot.position, objectPositions[i]) < 1.5f) {
+                    lastScannedIndex = i;
+                    showInfoPopup = true;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                showInfoPopup = false;
+                lastScannedIndex = -1;
+            }
         }
-
-
         else {
             glm::vec3 target = fullPath[pathIndex];
 
             if (!isWaiting) {
-                glm::vec3 target = fullPath[pathIndex];
-
                 float dist = glm::distance(robot.position, target);
 
                 if (dist < 0.2f) {
@@ -405,14 +407,6 @@ int main()
                     bool inBounds = nextPos.x >= -10.0f + robotRadius && nextPos.x <= 10.0f - robotRadius &&
                         nextPos.z >= -5.0f + robotRadius && nextPos.z <= 5.0f - robotRadius;
 
-                    bool hitsObject = false;
-                    for (const auto& obj : fullPath) {
-                        if (glm::distance(nextPos, obj) < 1.2f && glm::distance(obj, target) > 0.05f) {
-                            hitsObject = true;
-                            break;
-                        }
-                    }
-
                     if (inBounds) {
                         robot.moveTo(target, deltaTime * 2.0f);
                     }
@@ -426,13 +420,19 @@ int main()
                     pathIndex++;
 
                     if (pathIndex >= fullPath.size()) {
-                        pathIndex = 0; // yeniden başla
+                        pathIndex = 0;
                     }
+                }
+
+                popupTimer += deltaTime;
+                if (popupTimer >= 3.0f) {
+                    showInfoPopup = false;
                 }
             }
         }
 
         shader.use();
+
 
         glm::vec3 lightPos = glm::vec3(0.0f, 4.9f, 0.0f);
         glUniform3fv(glGetUniformLocation(shader.ID, "lightPos"), 1, glm::value_ptr(lightPos));
