@@ -346,17 +346,49 @@ int main()
     projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)h, 0.1f, 100.0f);
 
     float groundVertices[] = {
-        -10.0f, 0.0f, -5.0f,  10.0f, 0.0f, -5.0f,  10.0f, 0.0f, 5.0f,  -10.0f, 0.0f, 5.0f
+        // pozisyonlar            // normal vektörleri (yukarı bakan)
+        -10.0f, 0.0f, -5.0f,      0.0f, 1.0f, 0.0f,
+         10.0f, 0.0f, -5.0f,      0.0f, 1.0f, 0.0f,
+         10.0f, 0.0f,  5.0f,      0.0f, 1.0f, 0.0f,
+        -10.0f, 0.0f,  5.0f,      0.0f, 1.0f, 0.0f
     };
+
+
     unsigned int groundIndices[] = { 0, 1, 2, 0, 2, 3 };
 
     float wallVertices[] = {
-        -10,0,-5, -10,5,-5, -10,5,5, -10,0,5,
-        10,0,-5, 10,5,-5, 10,5,5, 10,0,5,
-        -10,0,-5, 10,0,-5, 10,5,-5, -10,5,-5,
-        -10,0,5, 10,0,5, 10,5,5, -10,5,5,
-        -10,5,-5, 10,5,-5, 10,5,5, -10,5,5
+        // Sol duvar (-X yönü)
+        -10,0,-5, -1.0f, 0.0f, 0.0f,
+        -10,5,-5, -1.0f, 0.0f, 0.0f,
+        -10,5, 5, -1.0f, 0.0f, 0.0f,
+        -10,0, 5, -1.0f, 0.0f, 0.0f,
+
+        // Sağ duvar (+X yönü)
+         10,0,-5, 1.0f, 0.0f, 0.0f,
+         10,5,-5, 1.0f, 0.0f, 0.0f,
+         10,5, 5, 1.0f, 0.0f, 0.0f,
+         10,0, 5, 1.0f, 0.0f, 0.0f,
+
+         // Arka duvar (-Z yönü)
+         -10,0,-5, 0.0f, 0.0f,-1.0f,
+          10,0,-5, 0.0f, 0.0f,-1.0f,
+          10,5,-5, 0.0f, 0.0f,-1.0f,
+         -10,5,-5, 0.0f, 0.0f,-1.0f,
+
+         // Ön duvar (+Z yönü)
+         -10,0, 5, 0.0f, 0.0f, 1.0f,
+          10,0, 5, 0.0f, 0.0f, 1.0f,
+          10,5, 5, 0.0f, 0.0f, 1.0f,
+         -10,5, 5, 0.0f, 0.0f, 1.0f,
+
+         // Tavan (üst, +Y yönü)
+         -10,5,-5, 0.0f, 1.0f, 0.0f,
+          10,5,-5, 0.0f, 1.0f, 0.0f,
+          10,5, 5, 0.0f, 1.0f, 0.0f,
+         -10,5, 5, 0.0f, 1.0f, 0.0f
     };
+
+
     unsigned int wallIndices[] = {
         0,1,2, 0,2,3,
         4,5,6, 4,6,7,
@@ -367,24 +399,40 @@ int main()
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
+
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(groundVertices), groundVertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundIndices), groundIndices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    // Pozisyon
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    // Normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    ;
 
     glGenVertexArrays(1, &wallVAO);
     glGenBuffers(1, &wallVBO);
     glGenBuffers(1, &wallEBO);
+
     glBindVertexArray(wallVAO);
     glBindBuffer(GL_ARRAY_BUFFER, wallVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(wallVertices), wallVertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, wallEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(wallIndices), wallIndices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    // Pozisyon
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    // Normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
 
     while (!glfwWindowShouldClose(window))
     {
