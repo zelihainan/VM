@@ -520,12 +520,12 @@ int main()
         if (ImGui::CollapsingHeader("Robot Settings")) {
             ImGui::Checkbox("Auto Mode", &autoMode);
             if (!autoMode) {
-                if (ImGui::Button("Left"))  robot.position.x -= deltaTime * 5.0f;
+                if (ImGui::Button("Left"))  robot.position.x -= deltaTime * 100.0f;
                 ImGui::SameLine();
-                if (ImGui::Button("Right")) robot.position.x += deltaTime * 5.0f;
-                if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 5.0f;
+                if (ImGui::Button("Right")) robot.position.x += deltaTime * 100.0f;
+                if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 100.0f;
                 ImGui::SameLine();
-                if (ImGui::Button("Back")) robot.position.z += deltaTime * 5.0f;
+                if (ImGui::Button("Back")) robot.position.z += deltaTime * 100.0f;
 
                 ImGui::Separator();
 
