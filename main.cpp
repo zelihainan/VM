@@ -220,6 +220,7 @@ std::vector<std::string> modelInfoTexts = {
 
 int main()
 {
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -251,6 +252,9 @@ int main()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    glm::vec3 smoothCameraPos = glm::vec3(0.0f, 1.5f, 10.0f); // Başlangıçta kamera pozisyonu ile aynı
+
 
     static const ImWchar turkish_range[] = {
         0x0020, 0x00FF, 
@@ -308,6 +312,10 @@ int main()
     Model model5("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model5.obj");
 
     Robot robot("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot.obj", glm::vec3(-5.0f, 0.0f, 2.5f));
+    
+    
+    enum CameraMode { Free, Follow, Scanner };
+    static CameraMode camMode = Free;
 
 
     std::vector<glm::vec3> objectPositions = {
@@ -458,8 +466,23 @@ int main()
         ImGui::ColorEdit3("Light 1 Color", glm::value_ptr(pointColors[0]));
         ImGui::ColorEdit3("Light 2 Color", glm::value_ptr(pointColors[1]));
 
+        ImGui::Separator();
+        ImGui::Text("Camera Mode");
+        ImGui::Combo("Select Mode", (int*)&camMode, "Free\0Follow\0Scanner\0");
+
 
         ImGui::End();
+        CameraMode prevCamMode = camMode;
+
+        if (camMode != prevCamMode) {
+            if (camMode == Follow) {
+                glm::vec3 offset = glm::vec3(0.0f, 2.5f, 5.0f);
+                glm::vec3 rotatedOffset = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(offset, 1.0f);
+                smoothCameraPos = robot.position + glm::vec3(rotatedOffset);  // Geçişte pozisyonu sıfırla
+            }
+            prevCamMode = camMode; // her frame güncelle
+        }
+
 
         if (showInfoPopup && lastScannedIndex >= 0 && lastScannedIndex < modelInfoTexts.size()) {
             ImGui::SetNextWindowSize(ImVec2(500, 200), ImGuiCond_Always);
@@ -561,6 +584,33 @@ int main()
 
         glUniform3fv(glGetUniformLocation(shader.ID, "viewPos"), 1, glm::value_ptr(camera.Position));
         glUniform3fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f)));
+
+
+        // Kamera moduna göre konumu ve yönü güncelle
+        if (camMode == Follow) {
+            glm::vec3 offset = glm::vec3(0.0f, 2.5f, 5.0f);
+            glm::vec3 rotatedOffset = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(offset, 1.0f);
+            glm::vec3 desiredPos = robot.position + glm::vec3(rotatedOffset);
+
+            // Smooth geçiş
+            smoothCameraPos = glm::mix(smoothCameraPos, desiredPos, deltaTime * 5.0f);
+            camera.Position = smoothCameraPos;
+
+            // BU SATIRI DEĞİŞTİR:
+            camera.Front = glm::normalize(robot.position - desiredPos); // sabit tutmak için desiredPos'u kullan
+        }
+
+
+        else if (camMode == Scanner) {
+            glm::vec3 headOffset = glm::vec3(0.0f, 1.8f, 0.0f); // robotun göz hizası
+            glm::vec3 forward = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+            camera.Position = robot.position + headOffset;
+            glm::vec3 scanDir = glm::normalize(glm::vec3(forward.x, -0.2f, forward.z)); // -0.2f ile hafif aşağı baktır
+            camera.Front = scanDir;
+        }
+
+
+
 
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("view", view);
