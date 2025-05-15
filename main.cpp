@@ -273,6 +273,52 @@ int main()
         "C:\\Users\\zeliha\\source\\repos\\Project1\\x64\\Debug\\fonts\\OpenSans-Regular.ttf", 16.0f, &font_cfg, turkish_range);
 
     ImGui::StyleColorsDark();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+
+    // Kenar yuvarlaklığı
+    style.WindowRounding = 6.0f;
+    style.FrameRounding = 4.0f;
+    style.GrabRounding = 3.0f;
+    style.ScrollbarRounding = 6.0f;
+
+    // Padding & Aralıklar
+    style.WindowPadding = ImVec2(12, 12);
+    style.FramePadding = ImVec2(8, 4);
+    style.ItemSpacing = ImVec2(10, 8);
+    style.ItemInnerSpacing = ImVec2(8, 4);
+
+    // Kalın kenarlık ve vurgular
+    style.FrameBorderSize = 1.0f;
+    style.WindowBorderSize = 1.0f;
+
+    // Tema renkleri
+    ImVec4* colors = style.Colors;
+    colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
+    colors[ImGuiCol_Header] = ImVec4(0.2f, 0.205f, 0.25f, 1.0f);
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.3f, 0.305f, 0.35f, 1.0f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.35f, 0.35f, 0.4f, 1.0f);
+
+    colors[ImGuiCol_Button] = ImVec4(0.2f, 0.205f, 0.25f, 1.0f);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.3f, 0.305f, 0.35f, 1.0f);
+    colors[ImGuiCol_ButtonActive] = ImVec4(0.15f, 0.1505f, 0.2f, 1.0f);
+
+    colors[ImGuiCol_FrameBg] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(0.2f, 0.205f, 0.25f, 1.0f);
+    colors[ImGuiCol_FrameBgActive] = ImVec4(0.25f, 0.25f, 0.3f, 1.0f);
+
+    colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.2f, 1.0f);
+    colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.38f, 0.5f, 1.0f);
+    colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.28f, 0.4f, 1.0f);
+    colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.15f, 0.2f, 1.0f);
+    colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.2f, 0.2f, 0.25f, 1.0f);
+
+    colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
+    colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
+
+
+
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
@@ -449,38 +495,55 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Robot Kontrol Paneli");
-        ImGui::Checkbox("Auto Mode", &autoMode);
-        if (!autoMode) {
-            if (ImGui::Button("Left"))  robot.position.x -= deltaTime * 5.0f;
-            if (ImGui::Button("Right")) robot.position.x += deltaTime * 5.0f;
-            if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 5.0f;
-            if (ImGui::Button("Back")) robot.position.z += deltaTime * 5.0f;
+   
+        // --- Kontrol Paneli ---
+        static bool initialized = false;
+        if (!initialized) {
+            ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 260, 10), ImGuiCond_Once);
+            ImGui::SetNextWindowSize(ImVec2(250, 400), ImGuiCond_Once); // boyut ayarlanabilir
+            initialized = true;
         }
-        ImGui::Separator();
-        ImGui::Text("Point Light Kontrol");
 
-        ImGui::SliderFloat("Light 1 Intensity", &pointIntensities[0], 0.0f, 3.0f);
-        ImGui::SliderFloat("Light 2 Intensity", &pointIntensities[1], 0.0f, 3.0f);
+        ImGui::Begin("Control Panel");
 
-        ImGui::ColorEdit3("Light 1 Color", glm::value_ptr(pointColors[0]));
-        ImGui::ColorEdit3("Light 2 Color", glm::value_ptr(pointColors[1]));
+        // === ROBOT AYARLARI ===
+        if (ImGui::CollapsingHeader("Robot Settings")) {
+            ImGui::Checkbox("Auto Mode", &autoMode);
+            if (!autoMode) {
+                if (ImGui::Button("Left"))  robot.position.x -= deltaTime * 5.0f;
+                ImGui::SameLine();
+                if (ImGui::Button("Right")) robot.position.x += deltaTime * 5.0f;
+                if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 5.0f;
+                ImGui::SameLine();
+                if (ImGui::Button("Back")) robot.position.z += deltaTime * 5.0f;
+            }
+        }
 
-        ImGui::Separator();
-        ImGui::Text("Camera Mode");
-        ImGui::Combo("Select Mode", (int*)&camMode, "Free\0Follow\0Scanner\0");
+        // === IŞIK AYARLARI ===
+        if (ImGui::CollapsingHeader("Light Settings")) {
+            ImGui::SliderFloat("Light 1 Intensity", &pointIntensities[0], 0.0f, 3.0f);
+            ImGui::SliderFloat("Light 2 Intensity", &pointIntensities[1], 0.0f, 3.0f);
+            ImGui::ColorEdit3("Light 1 Color", glm::value_ptr(pointColors[0]));
+            ImGui::ColorEdit3("Light 2 Color", glm::value_ptr(pointColors[1]));
+        }
 
+        // === KAMERA AYARLARI ===
+        if (ImGui::CollapsingHeader("Camera Settings")) {
+            ImGui::Combo("Select", (int*)&camMode, "Free\0Follow\0Scanner\0");
+        }
 
         ImGui::End();
+
+
         CameraMode prevCamMode = camMode;
 
         if (camMode != prevCamMode) {
             if (camMode == Follow) {
                 glm::vec3 offset = glm::vec3(0.0f, 2.5f, 5.0f);
                 glm::vec3 rotatedOffset = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(offset, 1.0f);
-                smoothCameraPos = robot.position + glm::vec3(rotatedOffset);  // Geçişte pozisyonu sıfırla
+                smoothCameraPos = robot.position + glm::vec3(rotatedOffset);  
             }
-            prevCamMode = camMode; // her frame güncelle
+            prevCamMode = camMode; 
         }
 
 
