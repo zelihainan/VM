@@ -184,6 +184,7 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
     glm::vec3 nextPos = robot.position;
     float speed = deltaTime * 5.0f;
 
+    // Yön tuşlarıyla pozisyon güncellemesi (WASD)
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         nextPos.z -= speed;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -193,20 +194,29 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         nextPos.x += speed;
 
+    // Q ve E tuşlarıyla gövdeyi döndür (rotationY)
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        robot.rotationY += deltaTime * 100.0f; // sola döner
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        robot.rotationY -= deltaTime * 100.0f; // sağa döner
+
+    // Sınırlardan dışarı çıkmasını engelle
     float robotRadius = 0.6f;
     if (nextPos.x < -10.0f + robotRadius || nextPos.x > 10.0f - robotRadius ||
         nextPos.z < -5.0f + robotRadius || nextPos.z > 5.0f - robotRadius)
         return;
 
+    // Objelere çarpmasını engelle
     for (const auto& obj : obstacles)
     {
-        float collisionRadius = 1.2f; 
+        float collisionRadius = 1.2f;
         if (glm::distance(nextPos, obj) < collisionRadius)
-            return; 
+            return;
     }
 
     robot.position = nextPos;
 }
+
 
 std::vector<std::string> modelInfoTexts = {
     u8"Kadın Portre Steli  Roma Dönemi, M.S. 2. yüzyıl Bu küçük boyutlu mezar steli, muhtemelen yerel bir Roma vatandaşına ait olup M.S. 2. yüzyıla tarihlenmektedir.Üzerinde kadın figürü yarım kabartma şeklinde yer alır; başı örtülü, göğsünde fibula(giysi tokası) olan sade ama anlam yüklü bir betimleme sunar.Üstteki üçgen alınlık kısmında sembolik bezemeler bulunur.Bu tür steller, Roma dönemi Anadolu’sunda kadınların sosyal kimliğini, ailevi bağlarını ve inanç sistemini yansıtan önemli belgelerdir.",
@@ -516,6 +526,17 @@ int main()
                 if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 5.0f;
                 ImGui::SameLine();
                 if (ImGui::Button("Back")) robot.position.z += deltaTime * 5.0f;
+
+                ImGui::Separator();
+
+                if (ImGui::Button("Rotate Left (Q)"))
+                    robot.rotationY += deltaTime * 10000.0f;
+
+                ImGui::SameLine();
+
+                if (ImGui::Button("Rotate Right (E)"))
+                    robot.rotationY -= deltaTime * 10000.0f;
+
             }
         }
 
