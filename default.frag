@@ -10,7 +10,7 @@ uniform vec3 objectColor;
 uniform bool useTexture;
 uniform sampler2D texture_diffuse1;
 
-// 5 spotlight pozisyonu ve yönü
+
 uniform vec3 spotLights[5];
 uniform vec3 spotDirs[5];
 uniform float intensities[5];
@@ -25,14 +25,12 @@ void main()
         // Spot ýþýk yönü
         vec3 lightDir = normalize(spotLights[i] - FragPos);
 
-        // Diffuse hesapla
         float diff = max(dot(norm, lightDir), 0.0);
 
-        // Spotlight etkisini yoðunlukla çarp
         lighting += diff * intensities[i] * lightColor;
     }
 
-    // Ambient light sabit
+    // Ambient light 
     float ambientStrength = 0.2;
     vec3 ambient = ambientStrength * lightColor;
     lighting += ambient;

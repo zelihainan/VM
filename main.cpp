@@ -25,7 +25,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 glm::mat4 projection;
 
-bool autoMode = false; // global tanım
+bool autoMode = false; 
 
 
 // === Shader kaynakları ===
@@ -116,9 +116,6 @@ void main()
 )";
 
 
-
-
-
 // === Callback fonksiyonları ===
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -196,18 +193,16 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         nextPos.x += speed;
 
-    // Sınırlardan dışarı çıkmasın
     float robotRadius = 0.6f;
     if (nextPos.x < -10.0f + robotRadius || nextPos.x > 10.0f - robotRadius ||
         nextPos.z < -5.0f + robotRadius || nextPos.z > 5.0f - robotRadius)
         return;
 
-    // Obje çarpışma kontrolü (manuel için)
     for (const auto& obj : obstacles)
     {
-        float collisionRadius = 1.2f; // modelin kapladığı alan
+        float collisionRadius = 1.2f; 
         if (glm::distance(nextPos, obj) < collisionRadius)
-            return; // çok yaklaştı, çarpışma oldu
+            return; 
     }
 
     robot.position = nextPos;
@@ -258,10 +253,10 @@ int main()
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     static const ImWchar turkish_range[] = {
-        0x0020, 0x00FF, // Latin-1
-        0x011E, 0x011F, // Ğğ
-        0x0130, 0x0131, // İı
-        0x015E, 0x015F, // Şş
+        0x0020, 0x00FF, 
+        0x011E, 0x011F, 
+        0x0130, 0x0131, 
+        0x015E, 0x015F, 
         0
     };
 
@@ -290,17 +285,17 @@ int main()
     };
 
     std::vector<glm::vec3> pointLights = {
-    glm::vec3(-9.0f, 1.0f, 4.0f),   // sol arka köşe
-    glm::vec3(9.0f, 1.0f, 4.0f)     // sağ arka köşe
+    glm::vec3(-9.0f, 1.0f, 4.0f),   
+    glm::vec3(9.0f, 1.0f, 4.0f)    
     };
 
     std::vector<glm::vec3> pointColors = {
-    glm::vec3(1.0f, 1.0f, 1.0f),  // Light 1 color (beyaz)
-    glm::vec3(1.0f, 1.0f, 1.0f)   // Light 2 color (beyaz)
+    glm::vec3(1.0f, 1.0f, 1.0f),  
+    glm::vec3(1.0f, 1.0f, 1.0f)   
     };
 
 
-    std::vector<float> pointIntensities = { 0.7f, 0.7f }; // Başlangıç ışık yoğunlukları
+    std::vector<float> pointIntensities = { 0.7f, 0.7f }; 
 
     glm::vec3 spotlightDirection = glm::vec3(0.0f, -1.0f, 0.0f);
 
@@ -326,13 +321,13 @@ int main()
     static int currentTarget = 0;
 
     std::vector<glm::vec3> fullPath = {
-        glm::vec3(-5.0f, 0.0f, 2.5f),  // Başlangıç
-        glm::vec3(-6.0f, 0.0f, 1.2f),  // Model 1 önü
-        glm::vec3(-3.0f, 0.0f, 1.2f),  // Model 2 önü
-        glm::vec3(0.0f, 0.0f, 1.2f),   // Model 3 önü
-        glm::vec3(3.0f, 0.0f, 1.2f),   // Model 4 önü
-        glm::vec3(6.0f, 0.0f, 1.2f),   // Model 5 önü
-        glm::vec3(-5.0f, 0.0f, 2.5f)   // Geri dönüş
+        glm::vec3(-5.0f, 0.0f, 2.5f),  
+        glm::vec3(-6.0f, 0.0f, 1.2f),  
+        glm::vec3(-3.0f, 0.0f, 1.2f),  
+        glm::vec3(0.0f, 0.0f, 1.2f),   
+        glm::vec3(3.0f, 0.0f, 1.2f),  
+        glm::vec3(6.0f, 0.0f, 1.2f),   
+        glm::vec3(-5.0f, 0.0f, 2.5f)   
     };
 
 
@@ -346,7 +341,7 @@ int main()
     projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)h, 0.1f, 100.0f);
 
     float groundVertices[] = {
-        // pozisyonlar            // normal vektörleri (yukarı bakan)
+        // pozisyon            // normal vektörleri 
         -10.0f, 0.0f, -5.0f,      0.0f, 1.0f, 0.0f,
          10.0f, 0.0f, -5.0f,      0.0f, 1.0f, 0.0f,
          10.0f, 0.0f,  5.0f,      0.0f, 1.0f, 0.0f,
@@ -357,31 +352,30 @@ int main()
     unsigned int groundIndices[] = { 0, 1, 2, 0, 2, 3 };
 
     float wallVertices[] = {
-        // Sol duvar (-X yönü)
         -10,0,-5, -1.0f, 0.0f, 0.0f,
         -10,5,-5, -1.0f, 0.0f, 0.0f,
         -10,5, 5, -1.0f, 0.0f, 0.0f,
         -10,0, 5, -1.0f, 0.0f, 0.0f,
 
-        // Sağ duvar (+X yönü)
+
          10,0,-5, 1.0f, 0.0f, 0.0f,
          10,5,-5, 1.0f, 0.0f, 0.0f,
          10,5, 5, 1.0f, 0.0f, 0.0f,
          10,0, 5, 1.0f, 0.0f, 0.0f,
 
-         // Arka duvar (-Z yönü)
+
          -10,0,-5, 0.0f, 0.0f,-1.0f,
           10,0,-5, 0.0f, 0.0f,-1.0f,
           10,5,-5, 0.0f, 0.0f,-1.0f,
          -10,5,-5, 0.0f, 0.0f,-1.0f,
 
-         // Ön duvar (+Z yönü)
+
          -10,0, 5, 0.0f, 0.0f, 1.0f,
           10,0, 5, 0.0f, 0.0f, 1.0f,
           10,5, 5, 0.0f, 0.0f, 1.0f,
          -10,5, 5, 0.0f, 0.0f, 1.0f,
 
-         // Tavan (üst, +Y yönü)
+
          -10,5,-5, 0.0f, 1.0f, 0.0f,
           10,5,-5, 0.0f, 1.0f, 0.0f,
           10,5, 5, 0.0f, 1.0f, 0.0f,
@@ -544,18 +538,15 @@ int main()
         shader.use();
 
         // --- Spotlight sistemi ---
-        // Hepsi dim (düşük ışık) başlasın
         std::vector<float> intensities(5, 0.2f);
 
-        // Robot yakındaysa sadece o modelin spot'u parlak olsun
         for (int i = 0; i < objectPositions.size(); ++i) {
             float distance = glm::distance(robot.position, objectPositions[i]);
             if (distance < 2.0f) {
-                intensities[i] = 2.5f; // yakındaki spot daha parlak
+                intensities[i] = 2.5f; 
             }
         }
 
-        // Spot ışıklarını shader'a gönder
         for (int i = 0; i < 5; ++i) {
             std::string posName = "spotLights[" + std::to_string(i) + "]";
             std::string dirName = "spotDirs[" + std::to_string(i) + "]";
@@ -618,9 +609,8 @@ int main()
         }
 
 
-
-
         robot.draw(shader);
+
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

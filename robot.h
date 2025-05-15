@@ -28,14 +28,16 @@ public:
 
 
     void draw(Shader& shader) {
+
         glm::mat4 modelMat = glm::mat4(1.0f);
-        modelMat = glm::translate(modelMat, position);
+        modelMat = glm::translate(modelMat, position + glm::vec3(0.0f, 0.6f, 0.0f));
         modelMat = glm::rotate(modelMat, glm::radians(rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
         modelMat = glm::scale(modelMat, glm::vec3(0.5f));
+
         shader.setMat4("model", modelMat);
 
-        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), true);
-        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
+        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);
+        glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.6f, 0.6f, 0.6f);
         body.Draw(shader);
     }
 };
