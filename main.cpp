@@ -28,6 +28,7 @@ glm::mat4 projection;
 bool autoMode = false; 
 
 float armAngle = 0.0f; // KOL AÇISI: 0 = yukarı, 90 = aşağı
+int scannedModelIndex = -1;
 
 
 // === Shader kaynakları ===
@@ -202,13 +203,11 @@ void moveIfValid(Robot& robot, glm::vec3 newPos, const std::vector<glm::vec3>& o
     robot.position = newPos;
 }
 
-// WASD ve Q/E tuşları için giriş kontrolü
 void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::vector<glm::vec3>& obstacles)
 {
     float speed = deltaTime * 5.0f;
     glm::vec3 nextPos = robot.position;
 
-    // Yön tuşları ile pozisyon
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         nextPos.z -= speed;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -218,14 +217,37 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         nextPos.x += speed;
 
-    // Q/E ile döndürme
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         robot.rotationY += deltaTime * 100.0f;
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         robot.rotationY -= deltaTime * 100.0f;
 
-    // Hareket uygunsa uygula
     moveIfValid(robot, nextPos, obstacles);
+}
+
+bool RayIntersectsAABB(glm::vec3 rayOrigin, glm::vec3 rayDir, glm::vec3 boxMin, glm::vec3 boxMax) {
+    float tMin = (boxMin.x - rayOrigin.x) / rayDir.x;
+    float tMax = (boxMax.x - rayOrigin.x) / rayDir.x;
+    if (tMin > tMax) std::swap(tMin, tMax);
+
+    float tyMin = (boxMin.y - rayOrigin.y) / rayDir.y;
+    float tyMax = (boxMax.y - rayOrigin.y) / rayDir.y;
+    if (tyMin > tyMax) std::swap(tyMin, tyMax);
+
+    if ((tMin > tyMax) || (tyMin > tMax))
+        return false;
+
+    if (tyMin > tMin) tMin = tyMin;
+    if (tyMax < tMax) tMax = tyMax;
+
+    float tzMin = (boxMin.z - rayOrigin.z) / rayDir.z;
+    float tzMax = (boxMax.z - rayOrigin.z) / rayDir.z;
+    if (tzMin > tzMax) std::swap(tzMin, tzMax);
+
+    if ((tMin > tzMax) || (tzMin > tMax))
+        return false;
+
+    return true;
 }
 
 
@@ -468,6 +490,11 @@ int main()
         8,9,10, 8,10,11
     };
 
+    unsigned int rayVAO, rayVBO;
+    glGenVertexArrays(1, &rayVAO);
+    glGenBuffers(1, &rayVBO);
+
+
     unsigned int VAO, VBO, EBO, wallVAO, wallVBO, wallEBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -601,33 +628,49 @@ int main()
         }
 
 
-        if (showInfoPopup && lastScannedIndex >= 0 && lastScannedIndex < modelInfoTexts.size()) {
+        if (scannedModelIndex != -1 && scannedModelIndex < modelInfoTexts.size()) {
             ImGui::SetNextWindowSize(ImVec2(500, 200), ImGuiCond_Always);
             ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);
 
-            ImGui::Begin("Model Bilgisi", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-            ImGui::TextWrapped("%s", modelInfoTexts[lastScannedIndex].c_str());
+            ImGui::Begin("Model Info", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+            ImGui::TextWrapped("%s", modelInfoTexts[scannedModelIndex].c_str());
             ImGui::End();
         }
+
 
         if (!autoMode) {
             processInput(window, robot, deltaTime, objectPositions);
 
-            bool found = false;
-            for (int i = 0; i < objectPositions.size(); ++i) {
-                if (glm::distance(robot.position, objectPositions[i]) < 1.5f) {
-                    lastScannedIndex = i;
-                    showInfoPopup = true;
-                    found = true;
-                    break;
+            // === TARAMA KONTROLÜ ===
+            scannedModelIndex = -1;
+
+            if (armAngle >= 60.0f) {
+                glm::vec3 rayStart = robot.position + glm::vec3(0.0f, 0.95f, 0.0f);
+                glm::vec3 rayDir = glm::normalize(
+                    glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0, 0, 1, 0)
+                );
+
+
+                float minDist = 100.0f;
+
+                for (int i = 0; i < objectPositions.size(); ++i) {
+                    glm::vec3 toObj = objectPositions[i] - rayStart;
+                    float projLength = glm::dot(toObj, rayDir);
+
+                    if (projLength > 0.0f) {
+                        glm::vec3 closestPoint = rayStart + rayDir * projLength;
+                        float distanceToObj = glm::distance(closestPoint, objectPositions[i]);
+
+                        if (distanceToObj < 1.0f && projLength < minDist) {
+                            minDist = projLength;
+                            scannedModelIndex = i;
+                        }
+                    }
                 }
-            }
-            if (!found) {
-                showInfoPopup = false;
-                lastScannedIndex = -1;
             }
         }
         else {
+            // AUTO MODE
             glm::vec3 target = fullPath[pathIndex];
 
             if (!isWaiting) {
@@ -638,17 +681,15 @@ int main()
                     waitTimer = 0.0f;
 
                     if (pathIndex > 0 && pathIndex <= 5) {
-                        lastScannedIndex = pathIndex - 1;
-                        showInfoPopup = true;
+                        scannedModelIndex = pathIndex - 1;
                         popupTimer = 0.0f;
-                        armAngle = 60.0f; // otomatik modda tararken kol iniyor
+                        armAngle = 60.0f; // kol aşağı
                     }
                 }
                 else {
                     glm::vec3 direction = glm::normalize(target - robot.position);
                     glm::vec3 nextPos = robot.position + direction * deltaTime * 2.0f;
-
-                    moveIfValid(robot, nextPos, objectPositions); // ÇARPISMA KONTROLLÜ
+                    moveIfValid(robot, nextPos, objectPositions);
                 }
             }
             else {
@@ -661,18 +702,38 @@ int main()
                     if (pathIndex >= fullPath.size()) {
                         pathIndex = 0;
                     }
-                    armAngle = 0.0f; // kol yukarı kalksın
 
+                    armAngle = 0.0f; // kol yukarı
                 }
 
                 popupTimer += deltaTime;
                 if (popupTimer >= 3.0f) {
-                    showInfoPopup = false;
+                    scannedModelIndex = -1;
                 }
             }
         }
 
+
         shader.use();
+
+        glm::vec3 rayStart = robot.position + glm::vec3(0.0f, 0.95f, 0.0f);
+        glm::vec3 rayDir = glm::normalize(
+            glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0, 0, 1, 0)
+        );
+
+        glm::vec3 rayEnd = rayStart + rayDir * 10.0f;
+
+        float rayVertices[] = {
+            rayStart.x, rayStart.y, rayStart.z,
+            rayEnd.x, rayEnd.y, rayEnd.z
+        };
+
+        glBindVertexArray(rayVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, rayVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(rayVertices), rayVertices, GL_DYNAMIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
 
         // --- Spotlight sistemi ---
         std::vector<float> intensities(5, 0.2f);
@@ -759,6 +820,19 @@ int main()
             glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 1.0f, 1.0f);
             model->Draw(shader);
         }
+
+        if (armAngle >= 60.0f) // Kolu kaldırınca tarama yapılabilsin
+        {
+            glUseProgram(shader.ID);
+            glm::mat4 rayModel = glm::mat4(1.0f);
+            shader.setMat4("model", rayModel);
+            glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);
+            glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 0.0f, 0.0f); // KIRMIZI
+
+            glBindVertexArray(rayVAO);
+            glDrawArrays(GL_LINES, 0, 2);
+        }
+
 
         for (int i = 0; i < 2; ++i) {
             std::string lightName = "pointLights[" + std::to_string(i) + "]";
