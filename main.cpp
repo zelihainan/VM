@@ -179,12 +179,34 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 }
 
+// Ortak çarpışma ve sınır kontrolü fonksiyonu
+void moveIfValid(Robot& robot, glm::vec3 newPos, const std::vector<glm::vec3>& obstacles)
+{
+    float robotRadius = 0.6f;
+
+    // Duvar sınırları
+    if (newPos.x < -10.0f + robotRadius || newPos.x > 10.0f - robotRadius ||
+        newPos.z < -5.0f + robotRadius || newPos.z > 5.0f - robotRadius)
+        return;
+
+    // Obje çarpışma kontrolü
+    for (const auto& obj : obstacles)
+    {
+        float collisionRadius = 1.2f;
+        if (glm::distance(newPos, obj) < collisionRadius)
+            return;
+    }
+
+    robot.position = newPos;
+}
+
+// WASD ve Q/E tuşları için giriş kontrolü
 void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::vector<glm::vec3>& obstacles)
 {
-    glm::vec3 nextPos = robot.position;
     float speed = deltaTime * 5.0f;
+    glm::vec3 nextPos = robot.position;
 
-    // Yön tuşlarıyla pozisyon güncellemesi (WASD)
+    // Yön tuşları ile pozisyon
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         nextPos.z -= speed;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -194,28 +216,16 @@ void processInput(GLFWwindow* window, Robot& robot, float deltaTime, const std::
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         nextPos.x += speed;
 
-    // Q ve E tuşlarıyla gövdeyi döndür (rotationY)
+    // Q/E ile döndürme
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        robot.rotationY += deltaTime * 100.0f; // sola döner
+        robot.rotationY += deltaTime * 100.0f;
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        robot.rotationY -= deltaTime * 100.0f; // sağa döner
+        robot.rotationY -= deltaTime * 100.0f;
 
-    // Sınırlardan dışarı çıkmasını engelle
-    float robotRadius = 0.6f;
-    if (nextPos.x < -10.0f + robotRadius || nextPos.x > 10.0f - robotRadius ||
-        nextPos.z < -5.0f + robotRadius || nextPos.z > 5.0f - robotRadius)
-        return;
-
-    // Objelere çarpmasını engelle
-    for (const auto& obj : obstacles)
-    {
-        float collisionRadius = 1.2f;
-        if (glm::distance(nextPos, obj) < collisionRadius)
-            return;
-    }
-
-    robot.position = nextPos;
+    // Hareket uygunsa uygula
+    moveIfValid(robot, nextPos, obstacles);
 }
+
 
 
 std::vector<std::string> modelInfoTexts = {
@@ -517,28 +527,44 @@ int main()
         ImGui::Begin("Control Panel");
 
         // === ROBOT AYARLARI ===
-        if (ImGui::CollapsingHeader("Robot Settings")) {
+// === ROBOT AYARLARI ===
+        if (ImGui::CollapsingHeader("Robot Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Checkbox("Auto Mode", &autoMode);
             if (!autoMode) {
-                if (ImGui::Button("Left"))  robot.position.x -= deltaTime * 100.0f;
+                glm::vec3 next = robot.position;
+                float speed = deltaTime * 100.0f;
+
+                if (ImGui::Button("Left")) {
+                    next.x -= speed;
+                    moveIfValid(robot, next, objectPositions);
+                }
                 ImGui::SameLine();
-                if (ImGui::Button("Right")) robot.position.x += deltaTime * 100.0f;
-                if (ImGui::Button("Forward")) robot.position.z -= deltaTime * 100.0f;
+                if (ImGui::Button("Right")) {
+                    next = robot.position; next.x += speed;
+                    moveIfValid(robot, next, objectPositions);
+                }
+
+                if (ImGui::Button("Forward")) {
+                    next = robot.position; next.z -= speed;
+                    moveIfValid(robot, next, objectPositions);
+                }
                 ImGui::SameLine();
-                if (ImGui::Button("Back")) robot.position.z += deltaTime * 100.0f;
+                if (ImGui::Button("Back")) {
+                    next = robot.position; next.z += speed;
+                    moveIfValid(robot, next, objectPositions);
+                }
 
                 ImGui::Separator();
-
-                if (ImGui::Button("Rotate Left (Q)"))
-                    robot.rotationY += deltaTime * 10000.0f;
-
+                if (ImGui::Button("Rotate Left (Q)")) {
+                    robot.rotationY += deltaTime * 100.0f;
+                }
                 ImGui::SameLine();
-
-                if (ImGui::Button("Rotate Right (E)"))
-                    robot.rotationY -= deltaTime * 10000.0f;
-
+                if (ImGui::Button("Rotate Right (E)")) {
+                    robot.rotationY -= deltaTime * 100.0f;
+                }
             }
         }
+
 
         // === IŞIK AYARLARI ===
         if (ImGui::CollapsingHeader("Light Settings")) {
@@ -614,13 +640,7 @@ int main()
                     glm::vec3 direction = glm::normalize(target - robot.position);
                     glm::vec3 nextPos = robot.position + direction * deltaTime * 2.0f;
 
-                    float robotRadius = 0.5f;
-                    bool inBounds = nextPos.x >= -10.0f + robotRadius && nextPos.x <= 10.0f - robotRadius &&
-                        nextPos.z >= -5.0f + robotRadius && nextPos.z <= 5.0f - robotRadius;
-
-                    if (inBounds) {
-                        robot.moveTo(target, deltaTime * 2.0f);
-                    }
+                    moveIfValid(robot, nextPos, objectPositions); // ÇARPISMA KONTROLLÜ
                 }
             }
             else {
