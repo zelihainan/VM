@@ -27,6 +27,8 @@ glm::mat4 projection;
 
 bool autoMode = false; 
 
+float armAngle = 0.0f; // KOL AÇISI: 0 = yukarı, 90 = aşağı
+
 
 // === Shader kaynakları ===
 const char* vertexShaderSource = R"(
@@ -377,8 +379,11 @@ int main()
     Model model4("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model4.obj");
     Model model5("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model5.obj");
 
-    Robot robot("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot.obj", glm::vec3(-5.0f, 0.0f, 2.5f));
-    
+    Robot robot(
+        "C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot_body.obj",
+        "C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot_arm.obj",
+        glm::vec3(-5.0f, 0.0f, 2.5f)
+    );
     
     enum CameraMode { Free, Follow, Scanner };
     static CameraMode camMode = Free;
@@ -530,6 +535,8 @@ int main()
 // === ROBOT AYARLARI ===
         if (ImGui::CollapsingHeader("Robot Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Checkbox("Auto Mode", &autoMode);
+            ImGui::SliderFloat("Arm Angle", &armAngle, 0.0f, 90.0f);
+
             if (!autoMode) {
                 glm::vec3 next = robot.position;
                 float speed = deltaTime * 100.0f;
@@ -634,6 +641,7 @@ int main()
                         lastScannedIndex = pathIndex - 1;
                         showInfoPopup = true;
                         popupTimer = 0.0f;
+                        armAngle = 60.0f; // otomatik modda tararken kol iniyor
                     }
                 }
                 else {
@@ -653,6 +661,8 @@ int main()
                     if (pathIndex >= fullPath.size()) {
                         pathIndex = 0;
                     }
+                    armAngle = 0.0f; // kol yukarı kalksın
+
                 }
 
                 popupTimer += deltaTime;
@@ -763,7 +773,7 @@ int main()
         }
 
 
-        robot.draw(shader);
+        robot.draw(shader, armAngle);
 
 
         ImGui::Render();
