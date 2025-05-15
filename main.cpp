@@ -683,7 +683,7 @@ int main()
                     if (pathIndex > 0 && pathIndex <= 5) {
                         scannedModelIndex = pathIndex - 1;
                         popupTimer = 0.0f;
-                        armAngle = 60.0f; // kol aşağı
+                        armAngle = 60.0f; 
                     }
                 }
                 else {
@@ -703,7 +703,7 @@ int main()
                         pathIndex = 0;
                     }
 
-                    armAngle = 0.0f; // kol yukarı
+                    armAngle = 0.0f; 
                 }
 
                 popupTimer += deltaTime;
@@ -739,12 +739,15 @@ int main()
         std::vector<float> intensities(5, 0.2f);
 
         for (int i = 0; i < objectPositions.size(); ++i) {
-            float distance = glm::distance(robot.position, objectPositions[i]);
-            if (distance < 2.0f) {
+            if (i == scannedModelIndex && armAngle >= 60.0f) {
                 intensities[i] = 2.5f; 
+            }
+            else {
+                intensities[i] = 0.2f; 
             }
         }
 
+        
         for (int i = 0; i < 5; ++i) {
             std::string posName = "spotLights[" + std::to_string(i) + "]";
             std::string dirName = "spotDirs[" + std::to_string(i) + "]";
