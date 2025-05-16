@@ -797,14 +797,17 @@ int main()
         // --- Spotlight sistemi ---
         std::vector<float> intensities(5, 0.2f);
 
+        bool lightActive = (waitTimer >= 1.5f && waitTimer < 8.5f);
+
         for (int i = 0; i < objectPositions.size(); ++i) {
-            if (i == scannedModelIndex && armAngle >= 60.0f) {
-                intensities[i] = 2.5f; 
+            if (i == scannedModelIndex && lightActive) {
+                intensities[i] = 2.5f;
             }
             else {
-                intensities[i] = 0.2f; 
+                intensities[i] = 0.2f;
             }
         }
+
 
         
         for (int i = 0; i < 5; ++i) {
