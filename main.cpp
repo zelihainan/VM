@@ -12,6 +12,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+
 const unsigned int INIT_WIDTH = 800;
 const unsigned int INIT_HEIGHT = 600;
 
@@ -643,15 +644,15 @@ int main()
 
             // === TARAMA KONTROLÜ ===
             scannedModelIndex = -1;
-
-            if (armAngle >= 60.0f) {
-                glm::vec3 rayStart = robot.position + glm::vec3(0.0f, 0.95f, 0.0f);
+            
+            if (armAngle >= 60.0f && popupTimer < 3.0f) {
+                glm::vec3 rayStart = robot.position + glm::vec3(0.2f, 0.5f, 0.0f);
                 glm::vec3 rayDir = glm::normalize(
                     glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0, 0, 1, 0)
                 );
 
-
                 float minDist = 100.0f;
+                scannedModelIndex = -1; // önce sıfırla
 
                 for (int i = 0; i < objectPositions.size(); ++i) {
                     glm::vec3 toObj = objectPositions[i] - rayStart;
@@ -668,13 +669,14 @@ int main()
                     }
                 }
             }
+
         }
         else {
             // AUTO MODE
             glm::vec3 target = fullPath[pathIndex];
+            float dist = glm::distance(robot.position, target);
 
             if (!isWaiting) {
-                float dist = glm::distance(robot.position, target);
 
                 if (dist < 0.2f) {
                     isWaiting = true;
@@ -683,7 +685,10 @@ int main()
                     if (pathIndex > 0 && pathIndex <= 5) {
                         scannedModelIndex = pathIndex - 1;
                         popupTimer = 0.0f;
-                        armAngle = 60.0f; 
+                        armAngle = 60.0f;
+
+                        glm::vec3 toModel = objectPositions[scannedModelIndex] - robot.position;
+                        robot.rotationY = glm::degrees(atan2(toModel.x, toModel.z));
                     }
                 }
                 else {
@@ -692,31 +697,62 @@ int main()
                     moveIfValid(robot, nextPos, objectPositions);
                 }
             }
+
+
             else {
                 waitTimer += deltaTime;
+                popupTimer += deltaTime;
 
-                if (waitTimer >= 3.0f) {
-                    isWaiting = false;
-                    pathIndex++;
-
-                    if (pathIndex >= fullPath.size()) {
-                        pathIndex = 0;
-                    }
-
-                    armAngle = 0.0f; 
+                // === 1. AÇILMA FAZI (0 → 60 derece) ===
+                if (waitTimer < 1.5f) {
+                    armAngle = 60.0f * (waitTimer / 1.5f);
                 }
 
-                popupTimer += deltaTime;
-                if (popupTimer >= 3.0f) {
+                // === 2. TARAMA FAZI (60 ↔ 90 derece arasında gidip gelir) ===
+                else if (waitTimer >= 1.5f && waitTimer < 8.5f) {
+                    float t = waitTimer - 1.5f;  // 0 → 7.0
+                    armAngle = 75.0f + sin(t * 2.0f) * 15.0f;  // daha yavaş salınım
+                    if (armAngle > 90.0f) armAngle = 90.0f;
+                    if (armAngle < 60.0f) armAngle = 60.0f;
+                }
+
+                // === 3. KAPANMA FAZI (90 → 0 derece) ===
+                else if (waitTimer >= 8.5f && waitTimer < 10.0f) {
+                    float t = (waitTimer - 8.5f) / 1.5f;  // 0 → 1
+                    armAngle = 90.0f * (1.0f - t);  // linear close
+                }
+
+                // === Tarama bitince popup kapansın ===
+                if (popupTimer >= 10.0f) {
                     scannedModelIndex = -1;
                 }
+
+                // === Yeni hedefe geç ===
+                if (waitTimer >= 10.0f) {
+                    isWaiting = false;
+                    pathIndex++;
+                    if (pathIndex >= fullPath.size()) pathIndex = 0;
+                    armAngle = 0.0f;
+                }
             }
+
         }
 
 
         shader.use();
 
-        glm::vec3 rayStart = robot.position + glm::vec3(0.0f, 0.95f, 0.0f);
+        // Kol açısına göre yukarı-aşağı animasyon için hesap
+        float armHeightOffset = sin(glm::radians(armAngle)) * 0.3f;
+
+        glm::vec4 offset = glm::rotate(
+            glm::mat4(1.0f),
+            glm::radians(robot.rotationY),
+            glm::vec3(0, 1, 0)
+        ) * glm::vec4(-0.15f, 0.5f + armHeightOffset, 0.2f, 0.0f);
+
+        glm::vec3 rayStart = robot.position + glm::vec3(offset);
+
+
         glm::vec3 rayDir = glm::normalize(
             glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0, 0, 1, 0)
         );
