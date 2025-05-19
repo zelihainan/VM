@@ -11,7 +11,16 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <Windows.h>         
+#include <filesystem>        
+#include <string>            
 
+std::string getExecutableDir() {
+    char buffer[MAX_PATH];
+    GetModuleFileNameA(NULL, buffer, MAX_PATH);
+    std::filesystem::path exePath(buffer);
+    return exePath.parent_path().string();
+}
 
 const unsigned int INIT_WIDTH = 800;
 const unsigned int INIT_HEIGHT = 600;
@@ -318,8 +327,9 @@ int main()
     font_cfg.OversampleV = 1;
     font_cfg.PixelSnapH = true;
 
-    io.FontDefault = io.Fonts->AddFontFromFileTTF(
-        "C:\\Users\\zeliha\\source\\repos\\Project1\\x64\\Debug\\fonts\\OpenSans-Regular.ttf", 16.0f, &font_cfg, turkish_range);
+    std::string fontPath = getExecutableDir() + "\\fonts\\OpenSans-Regular.ttf";
+    io.FontDefault = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f, &font_cfg, turkish_range);
+
 
     ImGui::StyleColorsDark();
 
@@ -400,17 +410,19 @@ int main()
 
     Shader shader(vertexShaderSource, fragmentShaderSource);
 
-    Model model1("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model1.obj");
-    Model model2("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model2.obj");
-    Model model3("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model3.obj");
-    Model model4("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model4.obj");
-    Model model5("C:/Users/zeliha/source/repos/Project1/x64/Debug/models/model5.obj");
+    std::string baseDir = getExecutableDir();
+    Model model1(baseDir + "\\models\\model1.obj");
+    Model model2(baseDir + "\\models\\model2.obj");
+    Model model3(baseDir + "\\models\\model3.obj");
+    Model model4(baseDir + "\\models\\model4.obj");
+    Model model5(baseDir + "\\models\\model5.obj");
 
     Robot robot(
-        "C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot_body.obj",
-        "C:/Users/zeliha/source/repos/Project1/x64/Debug/models/robot_arm.obj",
+        baseDir + "\\models\\robot_body.obj",
+        baseDir + "\\models\\robot_arm.obj",
         glm::vec3(-5.0f, 0.0f, 2.5f)
     );
+
     
     enum CameraMode { Free, Follow, Scanner };
     static CameraMode camMode = Free;

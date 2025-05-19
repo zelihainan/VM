@@ -13,14 +13,23 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="shaders">
-      <UniqueIdentifier>{0c1781f4-82d5-44ef-9703-6e3a374de9f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="models">
-      <UniqueIdentifier>{b7b0df7c-76ad-41ca-afa2-2c8c3529e3cb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libs">
       <UniqueIdentifier>{74eac53b-333d-4336-b3c2-3c1040b59daa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{a31920cf-abe1-4bef-8dc3-123a14a4376d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\shaders">
+      <UniqueIdentifier>{0c1781f4-82d5-44ef-9703-6e3a374de9f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\models">
+      <UniqueIdentifier>{8bb9e1dc-5ab4-4887-aab8-ff4d3e8e0d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\fonts">
+      <UniqueIdentifier>{70a488ce-0a0c-42cf-8571-5607cac4681b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\textures">
+      <UniqueIdentifier>{61a8530b-f6f1-4db0-8c59-bd2c869ca553}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -92,10 +101,74 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
-      <Filter>shaders</Filter>
+      <Filter>assets\shaders</Filter>
     </None>
     <None Include="default.frag">
-      <Filter>shaders</Filter>
+      <Filter>assets\shaders</Filter>
     </None>
+    <None Include="..\..\..\Desktop\assets\models\model1.mtl">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model2.mtl">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model3.mtl">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model4.mtl">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model5.mtl">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model1.obj">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model2.obj">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model3.obj">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model4.obj">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model5.obj">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\robot_arm.obj">
+      <Filter>assets\models</Filter>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\robot_body.obj">
+      <Filter>assets\models</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Desktop\assets\models\brick_wall_texture.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\assets\models\ground_texture.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\assets\models\model1.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\assets\models\model2.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\assets\models\model3.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\assets\models\model4.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\assets\models\model5.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\..\Desktop\assets\fonts\OpenSans-Regular.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

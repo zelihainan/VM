@@ -30,7 +30,7 @@ private:
         std::vector<tinyobj::material_t> materials;
         std::string warn, err;
 
-        directory = path.substr(0, path.find_last_of('/'));
+        directory = path.substr(0, path.find_last_of("/\\"));
 
         bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.c_str(), directory.c_str());
 

@@ -102,8 +102,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if exist "$(ProjectDir)assets" xcopy /E /Y /I "$(ProjectDir)assets" "$(OutDir)assets\"
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,8 +127,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if exist "$(ProjectDir)assets" xcopy /E /Y /I "$(ProjectDir)assets" "$(OutDir)assets\"
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,8 +148,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if exist "$(ProjectDir)assets" xcopy /E /Y /I "$(ProjectDir)assets" "$(OutDir)assets\"
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -170,8 +173,9 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if exist "$(ProjectDir)assets" xcopy /E /Y /I "$(ProjectDir)assets" "$(OutDir)assets\"
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -200,8 +204,48 @@
     <ClInclude Include="stb_image_loader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\Desktop\assets\models\model1.mtl" />
+    <None Include="..\..\..\Desktop\assets\models\model2.mtl" />
+    <None Include="..\..\..\Desktop\assets\models\model3.mtl" />
+    <None Include="..\..\..\Desktop\assets\models\model4.mtl" />
+    <None Include="..\..\..\Desktop\assets\models\model5.mtl" />
     <None Include="default.frag" />
     <None Include="default.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Desktop\assets\models\brick_wall_texture.png" />
+    <Image Include="..\..\..\Desktop\assets\models\ground_texture.png" />
+    <Image Include="..\..\..\Desktop\assets\models\model1.png" />
+    <Image Include="..\..\..\Desktop\assets\models\model2.png" />
+    <Image Include="..\..\..\Desktop\assets\models\model3.png" />
+    <Image Include="..\..\..\Desktop\assets\models\model4.png" />
+    <Image Include="..\..\..\Desktop\assets\models\model5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Desktop\assets\models\model1.obj">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model2.obj">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model3.obj">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model4.obj">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\model5.obj">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\robot_arm.obj">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Desktop\assets\models\robot_body.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\..\Desktop\assets\fonts\OpenSans-Regular.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
