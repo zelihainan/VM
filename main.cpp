@@ -16,7 +16,7 @@
 const unsigned int INIT_WIDTH = 800;
 const unsigned int INIT_HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 1.5f, 10.0f));
+Camera camera(glm::vec3(0.0f, 2.0f, 15.0f));
 float lastX = INIT_WIDTH / 2.0f;
 float lastY = INIT_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -279,6 +279,10 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
+    int w, h;
+    glfwGetFramebufferSize(window, &w, &h);
+    projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)h, 0.1f, 100.0f);
+
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -438,7 +442,6 @@ int main()
     static float waitTimer = 0.0f;
 
 
-    int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)h, 0.1f, 100.0f);
 
