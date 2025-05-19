@@ -568,6 +568,8 @@ int main()
             if (!autoMode) {
                 glm::vec3 next = robot.position;
                 float speed = deltaTime * 100.0f;
+                const float rotationSpeed = 10.0f;  // her tıklamada 5 derece dönsün
+
 
                 if (ImGui::Button("Left")) {
                     next.x -= speed;
@@ -591,11 +593,11 @@ int main()
 
                 ImGui::Separator();
                 if (ImGui::Button("Rotate Left (Q)")) {
-                    robot.rotationY += deltaTime * 100.0f;
+                    robot.rotationY += rotationSpeed;
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Rotate Right (E)")) {
-                    robot.rotationY -= deltaTime * 100.0f;
+                    robot.rotationY -= rotationSpeed;
                 }
             }
         }
@@ -765,13 +767,17 @@ int main()
         shader.use();
 
         // Kol açısına göre yukarı-aşağı animasyon için hesap
-        float armHeightOffset = sin(glm::radians(armAngle)) * 0.3f;
+        // === Kol hareketini yumuşat ===
+        static float smoothArmAngle = 0.0f;
+        float dampingSpeed = 8.0f;
+        smoothArmAngle = glm::mix(smoothArmAngle, armAngle, deltaTime * dampingSpeed);
+        float armHeightOffset = sin(glm::radians(smoothArmAngle)) * 0.3f;
 
         glm::vec4 offset = glm::rotate(
             glm::mat4(1.0f),
             glm::radians(robot.rotationY),
             glm::vec3(0, 1, 0)
-        ) * glm::vec4(-0.20f, 0.15f + armHeightOffset, 0.20f, 0.0f);
+        ) * glm::vec4(-0.20f, 0.20f + armHeightOffset, 0.25f, 0.0f);
 
         glm::vec3 rayStart = robot.position + glm::vec3(offset);
 
@@ -780,7 +786,7 @@ int main()
             glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0, 0, 1, 0)
         );
 
-        glm::vec3 rayEnd = rayStart + rayDir * 10.0f;
+        glm::vec3 rayEnd = rayStart + rayDir * 5.5f;
 
         float rayVertices[] = {
             rayStart.x, rayStart.y, rayStart.z,
@@ -797,7 +803,9 @@ int main()
         // --- Spotlight sistemi ---
         std::vector<float> intensities(5, 0.2f);
 
-        bool lightActive = (waitTimer >= 1.5f && waitTimer < 8.5f);
+        bool lightActive =
+            (!autoMode && armAngle >= 60.0f && scannedModelIndex != -1) ||  // manuel mod
+            (autoMode && waitTimer >= 1.5f && waitTimer < 8.5f);            // auto mod
 
         for (int i = 0; i < objectPositions.size(); ++i) {
             if (i == scannedModelIndex && lightActive) {
