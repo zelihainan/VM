@@ -183,13 +183,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\backends\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui.cpp" />
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_draw.cpp" />
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_tables.cpp" />
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_widgets.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Libraries\imgui\imgui.cpp" />
+    <ClCompile Include="Libraries\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Libraries\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Libraries\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Libraries\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -198,58 +198,23 @@
     <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\imconfig.h" />
     <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\imgui.h" />
     <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_internal.h" />
-    <ClInclude Include="..\..\..\Desktop\tiny_obj_loader.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Libraries\imgui\imconfig.h" />
+    <ClInclude Include="Libraries\imgui\imgui.h" />
+    <ClInclude Include="Libraries\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Libraries\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Libraries\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Libraries\imgui\imgui_internal.h" />
+    <ClInclude Include="Libraries\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Libraries\imgui\imstb_textedit.h" />
+    <ClInclude Include="Libraries\imgui\imstb_truetype.h" />
+    <ClInclude Include="Libraries\lib\tiny_obj_loader.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="robot.h" />
     <ClInclude Include="shaderClass.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stb_image_loader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Desktop\assets\models\model1.mtl" />
-    <None Include="..\..\..\Desktop\assets\models\model2.mtl" />
-    <None Include="..\..\..\Desktop\assets\models\model3.mtl" />
-    <None Include="..\..\..\Desktop\assets\models\model4.mtl" />
-    <None Include="..\..\..\Desktop\assets\models\model5.mtl" />
-    <None Include="default.frag" />
-    <None Include="default.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\Desktop\assets\models\brick_wall_texture.png" />
-    <Image Include="..\..\..\Desktop\assets\models\ground_texture.png" />
-    <Image Include="..\..\..\Desktop\assets\models\model1.png" />
-    <Image Include="..\..\..\Desktop\assets\models\model2.png" />
-    <Image Include="..\..\..\Desktop\assets\models\model3.png" />
-    <Image Include="..\..\..\Desktop\assets\models\model4.png" />
-    <Image Include="..\..\..\Desktop\assets\models\model5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Desktop\assets\models\model1.obj">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model2.obj">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model3.obj">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model4.obj">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model5.obj">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\robot_arm.obj">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\robot_body.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\..\..\Desktop\assets\fonts\OpenSans-Regular.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

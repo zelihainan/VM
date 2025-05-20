@@ -13,23 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="libs">
+    <Filter Include="lib">
       <UniqueIdentifier>{74eac53b-333d-4336-b3c2-3c1040b59daa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="assets">
-      <UniqueIdentifier>{a31920cf-abe1-4bef-8dc3-123a14a4376d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="assets\shaders">
-      <UniqueIdentifier>{0c1781f4-82d5-44ef-9703-6e3a374de9f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="assets\models">
-      <UniqueIdentifier>{8bb9e1dc-5ab4-4887-aab8-ff4d3e8e0d05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="assets\fonts">
-      <UniqueIdentifier>{70a488ce-0a0c-42cf-8571-5607cac4681b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="assets\textures">
-      <UniqueIdentifier>{61a8530b-f6f1-4db0-8c59-bd2c869ca553}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,29 +24,26 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui.cpp">
+    <ClCompile Include="Libraries\imgui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_draw.cpp">
+    <ClCompile Include="Libraries\imgui\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_tables.cpp">
+    <ClCompile Include="Libraries\imgui\imgui_impl_glfw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_widgets.cpp">
+    <ClCompile Include="Libraries\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\backends\imgui_impl_glfw.cpp">
+    <ClCompile Include="Libraries\imgui\imgui_tables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Desktop\imgui-master\imgui-master\backends\imgui_impl_opengl3.cpp">
+    <ClCompile Include="Libraries\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Desktop\tiny_obj_loader.h">
-      <Filter>libs</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -98,77 +80,35 @@
     <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\backends\imgui_impl_opengl3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.vert">
-      <Filter>assets\shaders</Filter>
-    </None>
-    <None Include="default.frag">
-      <Filter>assets\shaders</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model1.mtl">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model2.mtl">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model3.mtl">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model4.mtl">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model5.mtl">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model1.obj">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model2.obj">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model3.obj">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model4.obj">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\model5.obj">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\robot_arm.obj">
-      <Filter>assets\models</Filter>
-    </None>
-    <None Include="..\..\..\Desktop\assets\models\robot_body.obj">
-      <Filter>assets\models</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\Desktop\assets\models\brick_wall_texture.png">
-      <Filter>assets\textures</Filter>
-    </Image>
-    <Image Include="..\..\..\Desktop\assets\models\ground_texture.png">
-      <Filter>assets\textures</Filter>
-    </Image>
-    <Image Include="..\..\..\Desktop\assets\models\model1.png">
-      <Filter>assets\textures</Filter>
-    </Image>
-    <Image Include="..\..\..\Desktop\assets\models\model2.png">
-      <Filter>assets\textures</Filter>
-    </Image>
-    <Image Include="..\..\..\Desktop\assets\models\model3.png">
-      <Filter>assets\textures</Filter>
-    </Image>
-    <Image Include="..\..\..\Desktop\assets\models\model4.png">
-      <Filter>assets\textures</Filter>
-    </Image>
-    <Image Include="..\..\..\Desktop\assets\models\model5.png">
-      <Filter>assets\textures</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\..\..\Desktop\assets\fonts\OpenSans-Regular.ttf">
-      <Filter>assets\fonts</Filter>
-    </Font>
+    <ClInclude Include="Libraries\imgui\imconfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imgui.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imgui_impl_glfw.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imgui_impl_opengl3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imgui_internal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imstb_rectpack.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imstb_textedit.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\imgui\imstb_truetype.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\lib\tiny_obj_loader.h">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
