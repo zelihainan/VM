@@ -327,7 +327,7 @@ int main()
     font_cfg.OversampleV = 1;
     font_cfg.PixelSnapH = true;
 
-    std::string fontPath = getExecutableDir() + "\\fonts\\OpenSans-Regular.ttf";
+    std::string fontPath = getExecutableDir() + "assets/fonts/OpenSans-Regular.ttf";
     io.FontDefault = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f, &font_cfg, turkish_range);
 
 
@@ -411,17 +411,20 @@ int main()
     Shader shader(vertexShaderSource, fragmentShaderSource);
 
     std::string baseDir = getExecutableDir();
-    Model model1(baseDir + "\\models\\model1.obj");
-    Model model2(baseDir + "\\models\\model2.obj");
-    Model model3(baseDir + "\\models\\model3.obj");
-    Model model4(baseDir + "\\models\\model4.obj");
-    Model model5(baseDir + "\\models\\model5.obj");
+    std::string modelDir = baseDir + "/../../assets/models/";
+
+    Model model1(modelDir + "model1.obj");
+    Model model2(modelDir + "model2.obj");
+    Model model3(modelDir + "model3.obj");
+    Model model4(modelDir + "model4.obj");
+    Model model5(modelDir + "model5.obj");
 
     Robot robot(
-        baseDir + "\\models\\robot_body.obj",
-        baseDir + "\\models\\robot_arm.obj",
+        modelDir + "robot_body.obj",
+        modelDir + "robot_arm.obj",
         glm::vec3(-5.0f, 0.0f, 2.5f)
     );
+
 
     
     enum CameraMode { Free, Follow, Scanner };
