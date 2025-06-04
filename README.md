@@ -14,3 +14,4 @@ WORKFLOW DIAGRAM
 ![workflow_diagram](https://github.com/user-attachments/assets/fc0ac727-3f73-449f-a365-ef031b944796)
 
 Method Descriptions: 
+[Method Descriptions.pdf](https://github.com/user-attachments/files/20591410/Method.Descriptions.pdf)
