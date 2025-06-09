@@ -8,10 +8,12 @@
 
 # Project Overview
 
+# Project Overview
+
 Virtual Museum is an interactive 3D application developed using C++ and OpenGL 3.3, aiming to simulate a virtual museum environment. In this project, users navigate a 3D room containing five Blender-modeled artifacts using a mobile robot equipped with a scanning arm.
 
 Key features include:
-- Realistic lighting (one global light and five artifact-specific spotlights)
+- Realistic lighting setup with one main directional light, two ambient point lights, and five artifact-specific spotlights
 - Manual and automatic robot navigation
 - Scanning system with pop-up information displays
 - ImGui-based user interface for robot and lighting control
@@ -47,15 +49,18 @@ git clone https://github.com/yuemco/virtual-adana-museum-v2-team-7.git
 virtual-adana-museum-v2-team-7/
 ```txt
 virtual-adana-museum-v2-team-7/
-├── assets/
-│   ├── models/           → 3D object files  
-│   ├── font/             
-├── Libraries/  
-│   ├── include/          
+├── assets/               → Models and textures
+├── docs/                 → Diagrams
+├── Libraries/            → External dependencies
+│   ├── include/
 │   ├── lib/
-│   ├── imgui/ 
-├── docs/                 → Diagrams  
-└── README.md             → This documentation file
+│   └── imgui/
+├── main.cpp
+├── Project1.sln
+├── Project1.vcxproj
+├── Project1.vcxproj.filters
+├── Project1.vcxproj.user
+├── README.md             → This documentation file
 ```
 
 # Controls
