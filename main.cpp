@@ -37,11 +37,11 @@ glm::mat4 projection;
 
 bool autoMode = false; 
 
-float armAngle = 0.0f; // KOL AÇISI: 0 = yukarı, 90 = aşağı
+float armAngle = 0.0f; 
 int scannedModelIndex = -1;
 
 
-// === Shader kaynakları ===
+//Shader kaynakları
 const char* vertexShaderSource = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
@@ -129,7 +129,7 @@ void main()
 )";
 
 
-// === Callback fonksiyonları ===
+//Callback fonksiyonları
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -192,17 +192,14 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 }
 
-// Ortak çarpışma ve sınır kontrolü fonksiyonu
 void moveIfValid(Robot& robot, glm::vec3 newPos, const std::vector<glm::vec3>& obstacles)
 {
     float robotRadius = 0.6f;
 
-    // Duvar sınırları
     if (newPos.x < -10.0f + robotRadius || newPos.x > 10.0f - robotRadius ||
         newPos.z < -5.0f + robotRadius || newPos.z > 5.0f - robotRadius)
         return;
 
-    // Obje çarpışma kontrolü
     for (const auto& obj : obstacles)
     {
         float collisionRadius = 1.2f;
@@ -261,7 +258,6 @@ bool RayIntersectsAABB(glm::vec3 rayOrigin, glm::vec3 rayDir, glm::vec3 boxMin, 
 }
 
 
-
 std::vector<std::string> modelInfoTexts = {
     u8"Kadın Portre Steli  Roma Dönemi, M.S. 2. yüzyıl Bu küçük boyutlu mezar steli, muhtemelen yerel bir Roma vatandaşına ait olup M.S. 2. yüzyıla tarihlenmektedir.Üzerinde kadın figürü yarım kabartma şeklinde yer alır; başı örtülü, göğsünde fibula(giysi tokası) olan sade ama anlam yüklü bir betimleme sunar.Üstteki üçgen alınlık kısmında sembolik bezemeler bulunur.Bu tür steller, Roma dönemi Anadolu’sunda kadınların sosyal kimliğini, ailevi bağlarını ve inanç sistemini yansıtan önemli belgelerdir.",
     u8"Erkek Heykeli  Roma Dönemi, M.S. 2. yüzyıl Bu tunç heykel, Roma İmparatorluğu'nun yüksek sanat anlayışını temsil eden, Toga giymiş bir erkek yurttaşı betimler. M.S. 2. yüzyıla tarihlenen bu eser, özellikle portre detaylarındaki gerçekçilikle dikkat çeker. Togası, dönemin sosyal statüsünü simgelerken, sağ eliyle tuttuğu belge ya da rulo figürü onun entelektüel ya da siyasal bir kimliği olabileceğini düşündürür. Bu tip heykeller, Roma kentlerinin kamu alanlarında imparatorluk değerlerini ve vatandaşlık bilincini yansıtmak için sergilenmiştir.",
@@ -269,7 +265,6 @@ std::vector<std::string> modelInfoTexts = {
     u8"Arabalı Tanrı Tarhunda (Fırtına Tanrısı)  Geç Hitit Dönemi, M.Ö. 9. yüzyıl Tarhunda, Anadolu'nun Geç Hitit dönemine ait en önemli tanrılarından biridir. Bu anıtsal taş heykel, Tarhunda’yı bir savaş arabası üzerinde iki boğa tarafından çekilirken tasvir eder. Tanrı’nın sağ elindeki balta ve sol elindeki yıldırım demeti, onun gök gürültüsü, savaş ve bereketle ilişkilendirilen doğasını simgeler. M.Ö. 9. yüzyıla tarihlenen bu eser, özellikle Arslantaş (eski Kummuh Krallığı) bölgesinden çıkarılmıştır ve Geç Hitit sanatının görkemli bir örneğidir.",
     u8"Akhilleus Lahdi  M.S. 2. yüzyıl, Roma Dönemi Akhilleus Lahdi, Troya Savaşı’nın kahramanı Akhilleus’un yaşamından sahnelerle süslenmiş yüksek kabartmalı bir mezar anıtıdır.M.S. 2. yüzyılda yapılmış olan bu lahit, ölen kişinin kahramanlıkla özdeşleştirilmek istendiğini gösterir.Lahdin bir yüzünde Akhilleus’un Briseis’i Agamemnon’a teslim edişi, diğer yüzlerde ise cenaze töreni ve savaş sahneleri yer alır.Mitolojik betimlemeleriyle yalnızca sanatsal değil, aynı zamanda simgesel anlatımıyla da dikkat çeker."
 };
-
 
 
 int main()
@@ -311,7 +306,7 @@ int main()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    glm::vec3 smoothCameraPos = glm::vec3(0.0f, 1.5f, 10.0f); // Başlangıçta kamera pozisyonu ile aynı
+    glm::vec3 smoothCameraPos = glm::vec3(0.0f, 1.5f, 10.0f);
 
 
     static const ImWchar turkish_range[] = {
@@ -335,23 +330,19 @@ int main()
 
     ImGuiStyle& style = ImGui::GetStyle();
 
-    // Kenar yuvarlaklığı
     style.WindowRounding = 6.0f;
     style.FrameRounding = 4.0f;
     style.GrabRounding = 3.0f;
     style.ScrollbarRounding = 6.0f;
 
-    // Padding & Aralıklar
     style.WindowPadding = ImVec2(12, 12);
     style.FramePadding = ImVec2(8, 4);
     style.ItemSpacing = ImVec2(10, 8);
     style.ItemInnerSpacing = ImVec2(8, 4);
 
-    // Kalın kenarlık ve vurgular
     style.FrameBorderSize = 1.0f;
     style.WindowBorderSize = 1.0f;
 
-    // Tema renkleri
     ImVec4* colors = style.Colors;
     colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
     colors[ImGuiCol_Header] = ImVec4(0.2f, 0.205f, 0.25f, 1.0f);
@@ -375,8 +366,6 @@ int main()
     colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
     colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.1f, 0.105f, 0.12f, 1.0f);
-
-
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
@@ -403,7 +392,6 @@ int main()
     glm::vec3(1.0f, 1.0f, 1.0f)   
     };
 
-
     std::vector<float> pointIntensities = { 0.7f, 0.7f }; 
 
     glm::vec3 spotlightDirection = glm::vec3(0.0f, -1.0f, 0.0f);
@@ -424,12 +412,9 @@ int main()
         modelDir + "robot_arm.obj",
         glm::vec3(-5.0f, 0.0f, 2.5f)
     );
-
-
     
     enum CameraMode { Free, Follow, Scanner };
     static CameraMode camMode = Free;
-
 
     std::vector<glm::vec3> objectPositions = {
         glm::vec3(-6.0f, 0.0f, 0.0f),
@@ -450,7 +435,6 @@ int main()
         glm::vec3(6.0f, 0.0f, 1.2f),   
         glm::vec3(-5.0f, 0.0f, 2.5f)   
     };
-
 
     static int pathIndex = 0;
     static bool isWaiting = false;
@@ -525,11 +509,9 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundIndices), groundIndices, GL_STATIC_DRAW);
 
-    // Pozisyon
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // Normal
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     ;
@@ -544,11 +526,9 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, wallEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(wallIndices), wallIndices, GL_STATIC_DRAW);
 
-    // Pozisyon
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // Normal
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
@@ -566,19 +546,18 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-   
-        // --- Kontrol Paneli ---
+
+        //Kontrol Paneli
         static bool initialized = false;
         if (!initialized) {
             ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 260, 10), ImGuiCond_Once);
-            ImGui::SetNextWindowSize(ImVec2(250, 400), ImGuiCond_Once); // boyut ayarlanabilir
+            ImGui::SetNextWindowSize(ImVec2(250, 400), ImGuiCond_Once);
             initialized = true;
         }
 
         ImGui::Begin("Control Panel");
 
-        // === ROBOT AYARLARI ===
-// === ROBOT AYARLARI ===
+        //ROBOT
         if (ImGui::CollapsingHeader("Robot Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Checkbox("Auto Mode", &autoMode);
             ImGui::SliderFloat("Arm Angle", &armAngle, 0.0f, 90.0f);
@@ -586,7 +565,7 @@ int main()
             if (!autoMode) {
                 glm::vec3 next = robot.position;
                 float speed = deltaTime * 100.0f;
-                const float rotationSpeed = 10.0f;  // her tıklamada 5 derece dönsün
+                const float rotationSpeed = 10.0f;
 
 
                 if (ImGui::Button("Left")) {
@@ -620,8 +599,7 @@ int main()
             }
         }
 
-
-        // === IŞIK AYARLARI ===
+        //IŞIK AYARLARI
         if (ImGui::CollapsingHeader("Light Settings")) {
             ImGui::SliderFloat("Light 1 Intensity", &pointIntensities[0], 0.0f, 3.0f);
             ImGui::SliderFloat("Light 2 Intensity", &pointIntensities[1], 0.0f, 3.0f);
@@ -629,13 +607,12 @@ int main()
             ImGui::ColorEdit3("Light 2 Color", glm::value_ptr(pointColors[1]));
         }
 
-        // === KAMERA AYARLARI ===
+        //KAMERA AYARLARI
         if (ImGui::CollapsingHeader("Camera Settings")) {
             ImGui::Combo("Select", (int*)&camMode, "Free\0Follow\0Scanner\0");
         }
 
         ImGui::End();
-
 
         CameraMode prevCamMode = camMode;
 
@@ -643,11 +620,10 @@ int main()
             if (camMode == Follow) {
                 glm::vec3 offset = glm::vec3(0.0f, 2.5f, 5.0f);
                 glm::vec3 rotatedOffset = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(offset, 1.0f);
-                smoothCameraPos = robot.position + glm::vec3(rotatedOffset);  
+                smoothCameraPos = robot.position + glm::vec3(rotatedOffset);
             }
-            prevCamMode = camMode; 
+            prevCamMode = camMode;
         }
-
 
         bool isScanningNow =
             (!autoMode && armAngle >= 60.0f) ||
@@ -665,13 +641,12 @@ int main()
         }
 
 
-
         if (!autoMode) {
             processInput(window, robot, deltaTime, objectPositions);
 
-            // === TARAMA KONTROLÜ ===
+            //TARAMA KONTROLÜ
             scannedModelIndex = -1;
-            
+
             if (armAngle >= 60.0f && popupTimer < 3.0f) {
                 glm::vec3 rayStart = robot.position + glm::vec3(0.2f, 0.5f, 0.0f);
                 glm::vec3 rayDir = glm::normalize(
@@ -679,7 +654,7 @@ int main()
                 );
 
                 float minDist = 100.0f;
-                scannedModelIndex = -1; // önce sıfırla
+                scannedModelIndex = -1;
 
                 for (int i = 0; i < objectPositions.size(); ++i) {
                     glm::vec3 toObj = objectPositions[i] - rayStart;
@@ -699,7 +674,7 @@ int main()
 
         }
         else {
-            // AUTO MODE
+            //AUTO MODE
             glm::vec3 target = fullPath[pathIndex];
             float dist = glm::distance(robot.position, target);
 
@@ -710,14 +685,13 @@ int main()
                         isWaiting = true;
                         waitTimer = 0.0f;
 
-						scannedModelIndex = pathIndex - 1; // Hedef modelin indexi
+                        scannedModelIndex = pathIndex - 1;
                         armAngle = 60.0f;
 
                         glm::vec3 toModel = objectPositions[scannedModelIndex] - robot.position;
                         robot.rotationY = glm::degrees(atan2(toModel.x, toModel.z));
                     }
                     else {
-                        // Eğer 0. index veya 6. index gibi hedef noktası bir model değilse:
                         isWaiting = false;
                         scannedModelIndex = -1;
                         armAngle = 0.0f;
@@ -726,8 +700,6 @@ int main()
                         if (pathIndex >= fullPath.size()) pathIndex = 0;
                     }
                 }
-
-
 
                 else {
                     glm::vec3 direction = glm::normalize(target - robot.position);
@@ -741,36 +713,34 @@ int main()
                 waitTimer += deltaTime;
                 popupTimer += deltaTime;
 
-                // === 1. AÇILMA FAZI (0 → 60 derece) ===
+                //1. AÇILMA FAZI (0 → 60 derece)
                 if (waitTimer < 1.5f) {
                     armAngle = 60.0f * (waitTimer / 1.5f);
 
                 }
 
-                // === 2. TARAMA FAZI (60 ↔ 90 derece arasında gidip gelir) ===
+                //2. TARAMA FAZI (60 ↔ 90 derece arasında gidip gelir)
                 else if (waitTimer >= 1.5f && waitTimer < 8.5f) {
                     float t = waitTimer - 1.5f;  // 0 → 7.0
-                    armAngle = 75.0f + sin(t * 2.0f) * 15.0f;  // daha yavaş salınım
+                    armAngle = 75.0f + sin(t * 2.0f) * 15.0f;
                     if (armAngle > 90.0f) armAngle = 90.0f;
                     if (armAngle < 60.0f) armAngle = 60.0f;
 
-                    if (popupTimer == 0.0f) popupTimer = 0.001f;  // başlat
+                    if (popupTimer == 0.0f) popupTimer = 0.001f;
                     scannedModelIndex = pathIndex - 1;
                 }
 
-                // === 3. KAPANMA FAZI (90 → 0 derece) ===
+                //3. KAPANMA FAZI (90 → 0 derece)
                 else if (waitTimer >= 8.5f && waitTimer < 10.0f) {
-                    float t = (waitTimer - 8.5f) / 1.5f;  // 0 → 1
-                    armAngle = 90.0f * (1.0f - t);  // linear close
+                    float t = (waitTimer - 8.5f) / 1.5f;
+                    armAngle = 90.0f * (1.0f - t);
                     scannedModelIndex = -1;
                 }
 
-               
-
-                // === Tarama bitince yeni hedefe geç ve popup'ı kapat ===
+                //Tarama bitince yeni hedefe geç ve popup'ı kapat
                 if (waitTimer >= 10.0f) {
                     isWaiting = false;
-                    scannedModelIndex = -1;      // ← Sadece burada sıfırlanmalı
+                    scannedModelIndex = -1;
                     popupTimer = 0.0f;
                     pathIndex++;
                     if (pathIndex >= fullPath.size()) pathIndex = 0;
@@ -778,14 +748,10 @@ int main()
                 }
 
             }
-
         }
-
 
         shader.use();
 
-        // Kol açısına göre yukarı-aşağı animasyon için hesap
-        // === Kol hareketini yumuşat ===
         static float smoothArmAngle = 0.0f;
         float dampingSpeed = 8.0f;
         smoothArmAngle = glm::mix(smoothArmAngle, armAngle, deltaTime * dampingSpeed);
@@ -817,13 +783,12 @@ int main()
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-
-        // --- Spotlight sistemi ---
+        //Spotlight sistemi
         std::vector<float> intensities(5, 0.2f);
 
         bool lightActive =
-            (!autoMode && armAngle >= 60.0f && scannedModelIndex != -1) ||  // manuel mod
-            (autoMode && waitTimer >= 1.5f && waitTimer < 8.5f);            // auto mod
+            (!autoMode && armAngle >= 60.0f && scannedModelIndex != -1) ||
+            (autoMode && waitTimer >= 1.5f && waitTimer < 8.5f);
 
         for (int i = 0; i < objectPositions.size(); ++i) {
             if (i == scannedModelIndex && lightActive) {
@@ -834,8 +799,6 @@ int main()
             }
         }
 
-
-        
         for (int i = 0; i < 5; ++i) {
             std::string posName = "spotLights[" + std::to_string(i) + "]";
             std::string dirName = "spotDirs[" + std::to_string(i) + "]";
@@ -846,37 +809,27 @@ int main()
             glUniform1f(glGetUniformLocation(shader.ID, intensityName.c_str()), intensities[i]);
         }
 
-
-
         glUniform3fv(glGetUniformLocation(shader.ID, "viewPos"), 1, glm::value_ptr(camera.Position));
         glUniform3fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f)));
 
-
-        // Kamera moduna göre konumu ve yönü güncelle
         if (camMode == Follow) {
             glm::vec3 offset = glm::vec3(0.0f, 2.5f, 5.0f);
             glm::vec3 rotatedOffset = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(offset, 1.0f);
             glm::vec3 desiredPos = robot.position + glm::vec3(rotatedOffset);
 
-            // Smooth geçiş
             smoothCameraPos = glm::mix(smoothCameraPos, desiredPos, deltaTime * 5.0f);
             camera.Position = smoothCameraPos;
 
-            // BU SATIRI DEĞİŞTİR:
-            camera.Front = glm::normalize(robot.position - desiredPos); // sabit tutmak için desiredPos'u kullan
+            camera.Front = glm::normalize(robot.position - desiredPos);
         }
-
 
         else if (camMode == Scanner) {
-            glm::vec3 headOffset = glm::vec3(0.0f, 1.8f, 0.0f); // robotun göz hizası
+            glm::vec3 headOffset = glm::vec3(0.0f, 1.8f, 0.0f);
             glm::vec3 forward = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
             camera.Position = robot.position + headOffset;
-            glm::vec3 scanDir = glm::normalize(glm::vec3(forward.x, -0.2f, forward.z)); // -0.2f ile hafif aşağı baktır
+            glm::vec3 scanDir = glm::normalize(glm::vec3(forward.x, -0.2f, forward.z));
             camera.Front = scanDir;
         }
-
-
-
 
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("view", view);
@@ -912,18 +865,16 @@ int main()
             model->Draw(shader);
         }
 
-        if (armAngle >= 60.0f) // Kolu kaldırınca tarama yapılabilsin
-        {
+        if (armAngle >= 60.0f) {
             glUseProgram(shader.ID);
             glm::mat4 rayModel = glm::mat4(1.0f);
             shader.setMat4("model", rayModel);
             glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);
-            glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 0.0f, 0.0f); // KIRMIZI
+            glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 1.0f, 0.0f, 0.0f);
 
             glBindVertexArray(rayVAO);
             glDrawArrays(GL_LINES, 0, 2);
         }
-
 
         for (int i = 0; i < 2; ++i) {
             std::string lightName = "pointLights[" + std::to_string(i) + "]";
@@ -947,11 +898,10 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
 
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
-    glfwTerminate();
-    return 0;
+        glfwTerminate();
+        return 0;
 }
