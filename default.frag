@@ -6,11 +6,12 @@ in vec3 Normal;
 
 uniform vec3 viewPos;
 uniform vec3 lightColor;
+uniform vec3 ceilingPos;
+uniform vec3 ceilingColor;
+uniform float ceilingIntensity;
 uniform vec3 objectColor;
 uniform bool useTexture;
 uniform sampler2D texture_diffuse1;
-
-
 uniform vec3 spotLights[5];
 uniform vec3 spotDirs[5];
 uniform float intensities[5];
@@ -30,12 +31,15 @@ void main()
         lighting += diff * intensities[i] * lightColor;
     }
 
-    // Ambient light 
+    vec3 ceilingDir = normalize(ceilingPos - FragPos);
+    float ceilingDiff = max(dot(norm, ceilingDir), 0.0);
+    vec3 ceilingLight = ceilingDiff * ceilingIntensity * ceilingColor;
+    lighting += ceilingLight;
+
     float ambientStrength = 0.2;
     vec3 ambient = ambientStrength * lightColor;
     lighting += ambient;
 
-    // Doku kullanýmý kontrolü
     vec4 baseColor;
     if (useTexture)
         baseColor = texture(texture_diffuse1, vec2(FragPos.x, FragPos.z));

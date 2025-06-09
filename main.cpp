@@ -24,6 +24,13 @@ std::string getExecutableDir() {
 const unsigned int INIT_WIDTH = 800;
 const unsigned int INIT_HEIGHT = 600;
 
+struct PointLight {
+    glm::vec3 position;
+    glm::vec3 color;
+    float intensity;
+};
+
+
 Camera camera(glm::vec3(0.0f, 2.0f, 15.0f));
 float lastX = INIT_WIDTH / 2.0f;
 float lastY = INIT_HEIGHT / 2.0f;
@@ -87,6 +94,10 @@ uniform vec3 pointLights[2];
 uniform float pointIntensities[2];
 uniform vec3 pointColors[2];
 
+uniform vec3 ceilingPos;
+uniform vec3 ceilingColor;
+uniform float ceilingIntensity;
+
 
 const float cutOff = cos(radians(20.0)); // Spotlight açısı
 
@@ -95,7 +106,7 @@ void main()
     vec3 norm = normalize(Normal);
     vec3 result = vec3(0.0);
 
-    // --- SPOTLIGHT etkisi ---
+
     for (int i = 0; i < 5; ++i)
     {
         vec3 lightDir = normalize(spotLights[i] - FragPos);
@@ -105,9 +116,14 @@ void main()
             float diff = max(dot(norm, lightDir), 0.0);
             result += diff * intensities[i] * lightColor;
         }
+
+    vec3 ceilingDir = normalize(ceilingPos - FragPos);
+    float ceilingDiff = max(dot(norm, ceilingDir), 0.0);
+    vec3 ceilingLight = ceilingDiff * ceilingIntensity * ceilingColor;
+    result += ceilingLight;
+
     }
 
-    // --- POINT LIGHT etkisi ---
     for (int i = 0; i < 2; ++i)
     {
         vec3 lightDir = normalize(pointLights[i] - FragPos);
@@ -115,10 +131,8 @@ void main()
         result += diff * pointIntensities[i] * pointColors[i];
     }
 
-    // --- Ambient ışık (sabit, ortam aydınlatması) ---
     result += 0.15 * lightColor;
 
-    // --- Renk hesaplama ---
     vec4 baseColor = useTexture
         ? texture(texture_diffuse1, TexCoord)
         : vec4(objectColor, 1.0);
@@ -258,7 +272,7 @@ bool RayIntersectsAABB(glm::vec3 rayOrigin, glm::vec3 rayDir, glm::vec3 boxMin, 
 
 
 std::vector<std::string> modelInfoTexts = {
-    u8"Kadın Portre Steli  Roma Dönemi, M.S. 2. yüzyıl Bu küçük boyutlu mezar steli, muhtemelen yerel bir Roma vatandaşına ait olup M.S. 2. yüzyıla tarihlenmektedir.Üzerinde kadın figürü yarım kabartma şeklinde yer alır; başı örtülü, göğsünde fibula(giysi tokası) olan sade ama anlam yüklü bir betimleme sunar.Üstteki üçgen alınlık kısmında sembolik bezemeler bulunur.Bu tür steller, Roma dönemi Anadolu’sunda kadınların sosyal kimliğini, ailevi bağlarını ve inanç sistemini yansıtan önemli belgelerdir.",
+    u8"Kadın Portre Steli  Roma Dönemi, M.S. 2. yüzyıl Bu küçük boyutlu mezar steli, muhtemelen yerel bir Roma vatandaşına ait olup M.S. 2. yüzyıla tarihlenmektedir.Üzerinde kadın figürü yarım kabartma şeklinde yer alır; başı örtülü, göğsünde fibula(giysi tokası) olan sade ama anlam yüklü bir betimleme sunar.Üstteki üçgen alınlık kısmında sembolik bezemeler bulunur.Bu tür steller, Roma dönemi Anadolusunda kadınların sosyal kimliğini, ailevi bağlarını ve inanç sistemini yansıtan önemli belgelerdir.",
     u8"Erkek Heykeli  Roma Dönemi, M.S. 2. yüzyıl Bu tunç heykel, Roma İmparatorluğu'nun yüksek sanat anlayışını temsil eden, Toga giymiş bir erkek yurttaşı betimler. M.S. 2. yüzyıla tarihlenen bu eser, özellikle portre detaylarındaki gerçekçilikle dikkat çeker. Togası, dönemin sosyal statüsünü simgelerken, sağ eliyle tuttuğu belge ya da rulo figürü onun entelektüel ya da siyasal bir kimliği olabileceğini düşündürür. Bu tip heykeller, Roma kentlerinin kamu alanlarında imparatorluk değerlerini ve vatandaşlık bilincini yansıtmak için sergilenmiştir.",
     u8"Filozoflar Lahdi  M.S. 3. yüzyıl, Roma Dönemi Bu mermer lahit, stoacı düşünce ve felsefi yaşamı simgeleyen figürlerle bezelidir.Lahdin uzun yüzeylerinde toga giymiş filozoflar ellerinde kitap, papirüs veya düşünür pozlarında gösterilmiştir.Bu tasvirler, ölen kişinin entelektüel bir yaşamı benimsediğini ve ölümden sonra da bilgelik içinde anılmak istendiğini ifade eder.Yazıtlarında Yunanca kitabeler yer alır.Bu tip lahitler, özellikle Roma İmparatorluğu’nun doğu eyaletlerinde seçkin sınıflar arasında yaygındı.",
     u8"Arabalı Tanrı Tarhunda (Fırtına Tanrısı)  Geç Hitit Dönemi, M.Ö. 9. yüzyıl Tarhunda, Anadolu'nun Geç Hitit dönemine ait en önemli tanrılarından biridir. Bu anıtsal taş heykel, Tarhunda’yı bir savaş arabası üzerinde iki boğa tarafından çekilirken tasvir eder. Tanrı’nın sağ elindeki balta ve sol elindeki yıldırım demeti, onun gök gürültüsü, savaş ve bereketle ilişkilendirilen doğasını simgeler. M.Ö. 9. yüzyıla tarihlenen bu eser, özellikle Arslantaş (eski Kummuh Krallığı) bölgesinden çıkarılmıştır ve Geç Hitit sanatının görkemli bir örneğidir.",
@@ -307,6 +321,11 @@ int main()
 
     glm::vec3 smoothCameraPos = glm::vec3(0.0f, 1.5f, 10.0f);
 
+    PointLight ceilingLight = {
+        glm::vec3(0.0f, 5.0f, 0.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        0.1f
+    };
 
     static const ImWchar turkish_range[] = {
         0x0020, 0x00FF, 
@@ -546,7 +565,6 @@ int main()
         ImGui::NewFrame();
 
 
-        //Kontrol Paneli
         static bool initialized = false;
         if (!initialized) {
             ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 260, 10), ImGuiCond_Once);
@@ -554,61 +572,60 @@ int main()
             initialized = true;
         }
 
+        //Kontrol Paneli
         ImGui::Begin("Control Panel");
-
-        //ROBOT
-        if (ImGui::CollapsingHeader("Robot Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+        if (ImGui::CollapsingHeader("Robot Controls", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Checkbox("Auto Mode", &autoMode);
-            ImGui::SliderFloat("Arm Angle", &armAngle, 0.0f, 90.0f);
 
             if (!autoMode) {
                 glm::vec3 next = robot.position;
                 float speed = deltaTime * 100.0f;
                 const float rotationSpeed = 10.0f;
 
+                ImGui::Text("Manual Movement");
 
-                if (ImGui::Button("Left")) {
-                    next.x -= speed;
-                    moveIfValid(robot, next, objectPositions);
-                }
+                if (ImGui::Button("Left")) { next.x -= speed; moveIfValid(robot, next, objectPositions); }
                 ImGui::SameLine();
-                if (ImGui::Button("Right")) {
-                    next = robot.position; next.x += speed;
-                    moveIfValid(robot, next, objectPositions);
-                }
+                if (ImGui::Button("Right")) { next.x += speed; moveIfValid(robot, next, objectPositions); }
+                ImGui::SameLine();
+                if (ImGui::Button("Forward")) { next.z -= speed; moveIfValid(robot, next, objectPositions); }
+                ImGui::SameLine();
+                if (ImGui::Button("Back")) { next.z += speed; moveIfValid(robot, next, objectPositions); }
 
-                if (ImGui::Button("Forward")) {
-                    next = robot.position; next.z -= speed;
-                    moveIfValid(robot, next, objectPositions);
-                }
+                if (ImGui::Button("Rotate Left (Q)")) { robot.rotationY += rotationSpeed; }
                 ImGui::SameLine();
-                if (ImGui::Button("Back")) {
-                    next = robot.position; next.z += speed;
-                    moveIfValid(robot, next, objectPositions);
-                }
+                if (ImGui::Button("Rotate Right (E)")) { robot.rotationY -= rotationSpeed; }
 
-                ImGui::Separator();
-                if (ImGui::Button("Rotate Left (Q)")) {
-                    robot.rotationY += rotationSpeed;
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("Rotate Right (E)")) {
-                    robot.rotationY -= rotationSpeed;
-                }
+                ImGui::SliderFloat("Arm Angle", &armAngle, 0.0f, 90.0f);
             }
         }
 
-        //IŞIK AYARLARI
-        if (ImGui::CollapsingHeader("Light Settings")) {
-            ImGui::SliderFloat("Light 1 Intensity", &pointIntensities[0], 0.0f, 3.0f);
-            ImGui::SliderFloat("Light 2 Intensity", &pointIntensities[1], 0.0f, 3.0f);
-            ImGui::ColorEdit3("Light 1 Color", glm::value_ptr(pointColors[0]));
-            ImGui::ColorEdit3("Light 2 Color", glm::value_ptr(pointColors[1]));
+        if (ImGui::CollapsingHeader("Light Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Columns(2, nullptr, false);
+
+            ImGui::Text("Light 1 Intensity"); ImGui::NextColumn();
+            ImGui::SliderFloat("##L1Int", &pointIntensities[0], 0.0f, 3.0f); ImGui::NextColumn();
+
+            ImGui::Text("Light 2 Intensity"); ImGui::NextColumn();
+            ImGui::SliderFloat("##L2Int", &pointIntensities[1], 0.0f, 3.0f); ImGui::NextColumn();
+
+            ImGui::Text("Main Light Intensity"); ImGui::NextColumn();
+            ImGui::SliderFloat("##CeilingInt", &ceilingLight.intensity, 0.0f, 0.5f); ImGui::NextColumn();
+
+            ImGui::Text("Light 1 Color"); ImGui::NextColumn();
+            ImGui::ColorEdit3("##L1Col", glm::value_ptr(pointColors[0]), ImGuiColorEditFlags_NoInputs); ImGui::NextColumn();
+
+            ImGui::Text("Light 2 Color"); ImGui::NextColumn();
+            ImGui::ColorEdit3("##L2Col", glm::value_ptr(pointColors[1]), ImGuiColorEditFlags_NoInputs); ImGui::NextColumn();
+
+            ImGui::Text("Main Light Color"); ImGui::NextColumn();
+            ImGui::ColorEdit3("##CeilingCol", glm::value_ptr(ceilingLight.color), ImGuiColorEditFlags_NoInputs); ImGui::NextColumn();
+
+            ImGui::Columns(1);
         }
 
-        //KAMERA AYARLARI
-        if (ImGui::CollapsingHeader("Camera Settings")) {
-            ImGui::Combo("Select", (int*)&camMode, "Free\0Follow\0Scanner\0");
+        if (ImGui::CollapsingHeader("Camera Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Combo("Camera Mode", (int*)&camMode, "Free\0Follow\0Scanner\0");
         }
 
         ImGui::End();
@@ -712,13 +729,10 @@ int main()
                 waitTimer += deltaTime;
                 popupTimer += deltaTime;
 
-                //1. AÇILMA FAZI (0 → 60 derece)
                 if (waitTimer < 1.5f) {
                     armAngle = 60.0f * (waitTimer / 1.5f);
 
                 }
-
-                //2. TARAMA FAZI (60 ↔ 90 derece arasında gidip gelir)
                 else if (waitTimer >= 1.5f && waitTimer < 8.5f) {
                     float t = waitTimer - 1.5f;  // 0 → 7.0
                     armAngle = 75.0f + sin(t * 2.0f) * 15.0f;
@@ -728,15 +742,11 @@ int main()
                     if (popupTimer == 0.0f) popupTimer = 0.001f;
                     scannedModelIndex = pathIndex - 1;
                 }
-
-                //3. KAPANMA FAZI (90 → 0 derece)
                 else if (waitTimer >= 8.5f && waitTimer < 10.0f) {
                     float t = (waitTimer - 8.5f) / 1.5f;
                     armAngle = 90.0f * (1.0f - t);
                     scannedModelIndex = -1;
                 }
-
-                //Tarama bitince yeni hedefe geç ve popup'ı kapat
                 if (waitTimer >= 10.0f) {
                     isWaiting = false;
                     scannedModelIndex = -1;
@@ -750,6 +760,10 @@ int main()
         }
 
         shader.use();
+
+        shader.setVec3("ceilingPos", ceilingLight.position);
+        shader.setVec3("ceilingColor", ceilingLight.color);
+        shader.setFloat("ceilingIntensity", ceilingLight.intensity);
 
         static float smoothArmAngle = 0.0f;
         float dampingSpeed = 8.0f;
