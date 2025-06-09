@@ -1,6 +1,8 @@
 # Blender 4.4.3
 # www.blender.org
 o Sol_Kol
+mtllib robot.mtl
+usemtl RobotMaterial
 v -0.258762 -0.092774 -0.016649
 v -0.256203 -0.105389 -0.031949
 v -0.248645 -0.118846 -0.044661

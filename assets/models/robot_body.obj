@@ -1,6 +1,8 @@
 # Blender 4.4.3
 # www.blender.org
 o Baş
+mtllib robot.mtl
+usemtl RobotMaterial
 v -0.213531 0.112444 0.267905
 v -0.261951 0.906764 0.215523
 v -0.213593 0.085160 -0.226465
