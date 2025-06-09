@@ -33,7 +33,6 @@ This project was developed as part of an academic course assignment by students 
 - Zeliha İnan – Student ID: 2021556037
 
 All models, textures, and source code were created and implemented by the team from scratch, adhering to open-source software principles and academic integrity standards.
-- Zeliha İnan – 2021556037
 
 # Installation and Execution Instructions
 
@@ -41,10 +40,7 @@ All models, textures, and source code were created and implemented by the team f
 
 ```bash
 git clone https://github.com/yuemco/virtual-adana-museum-v2-team-7.git
-cd virtual-adana-museum-v2-team-7
 ```
-
-- cd virtual-adana-museum-v2-team-7
 
 2. Open the `virtual-adana-museum-v2-team-7.sln` file using Visual Studio 2022.
 
