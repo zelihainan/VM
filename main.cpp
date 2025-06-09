@@ -279,6 +279,10 @@ std::vector<std::string> modelInfoTexts = {
     u8"Akhilleus Lahdi  M.S. 2. yüzyıl, Roma Dönemi Akhilleus Lahdi, Troya Savaşı’nın kahramanı Akhilleus’un yaşamından sahnelerle süslenmiş yüksek kabartmalı bir mezar anıtıdır.M.S. 2. yüzyılda yapılmış olan bu lahit, ölen kişinin kahramanlıkla özdeşleştirilmek istendiğini gösterir.Lahdin bir yüzünde Akhilleus’un Briseis’i Agamemnon’a teslim edişi, diğer yüzlerde ise cenaze töreni ve savaş sahneleri yer alır.Mitolojik betimlemeleriyle yalnızca sanatsal değil, aynı zamanda simgesel anlatımıyla da dikkat çeker."
 };
 
+enum CameraMode { Free, Follow, Scanner };
+CameraMode camMode = Free;
+CameraMode prevCamMode = Free;
+
 
 int main()
 {
@@ -431,8 +435,6 @@ int main()
         glm::vec3(-5.0f, 0.0f, 2.5f)
     );
     
-    enum CameraMode { Free, Follow, Scanner };
-    static CameraMode camMode = Free;
 
     std::vector<glm::vec3> objectPositions = {
         glm::vec3(-6.0f, 0.0f, 0.0f),
@@ -630,16 +632,21 @@ int main()
 
         ImGui::End();
 
-        CameraMode prevCamMode = camMode;
-
         if (camMode != prevCamMode) {
             if (camMode == Follow) {
-                glm::vec3 offset = glm::vec3(0.0f, 2.5f, 5.0f);
-                glm::vec3 rotatedOffset = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(offset, 1.0f);
-                smoothCameraPos = robot.position + glm::vec3(rotatedOffset);
+                camera.SetBehindRobot(robot.position, robot.rotationY, deltaTime);
+
             }
+
+
+            else if (camMode == Free) {
+                camera.Position = glm::vec3(0.0f, 2.0f, 15.0f);
+                camera.Front = glm::vec3(0.0f, 0.0f, -1.0f);
+            }
+
             prevCamMode = camMode;
         }
+
 
         bool isScanningNow =
             (!autoMode && armAngle >= 60.0f) ||
@@ -826,22 +833,14 @@ int main()
         glUniform3fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(glm::vec3(1.0f)));
 
         if (camMode == Follow) {
-            glm::vec3 offset = glm::vec3(0.0f, 2.5f, 5.0f);
-            glm::vec3 rotatedOffset = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(offset, 1.0f);
-            glm::vec3 desiredPos = robot.position + glm::vec3(rotatedOffset);
+            camera.SetBehindRobot(robot.position, robot.rotationY, deltaTime);
 
-            smoothCameraPos = glm::mix(smoothCameraPos, desiredPos, deltaTime * 5.0f);
-            camera.Position = smoothCameraPos;
-
-            camera.Front = glm::normalize(robot.position - desiredPos);
         }
 
+
         else if (camMode == Scanner) {
-            glm::vec3 headOffset = glm::vec3(0.0f, 1.8f, 0.0f);
-            glm::vec3 forward = glm::rotate(glm::mat4(1.0f), glm::radians(robot.rotationY), glm::vec3(0, 1, 0)) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-            camera.Position = robot.position + headOffset;
-            glm::vec3 scanDir = glm::normalize(glm::vec3(forward.x, -0.2f, forward.z));
-            camera.Front = scanDir;
+            camera.SetScannerView(robot.position, robot.rotationY);
+
         }
 
         glm::mat4 view = camera.GetViewMatrix();
