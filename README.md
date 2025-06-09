@@ -157,17 +157,46 @@ virtual-adana-museum-v2-team-7/
   - Return the robot to its initial spawn location with one click.
 - The user interface updates in real-time and is rendered within the OpenGL context.
 
-  # Technologies Used
+## Technologies and Tools Used
 
-- Programming Language: C++
-- Graphics Library: OpenGL 3.3 Core Profile
-- 3D Modeling: Blender
-- UI Framework: ImGui
-- Libraries: GLM, GLFW, GLAD
-- IDE: Visual Studio 2022
-- Version Control: Git, GitHub
+### Programming and Graphics
+- **Language:** C++
+- **Graphics API:** OpenGL 3.3 Core Profile
+- **Math Library:** GLM – for vector and matrix operations
+- **Window & Input Handling:** GLFW  
+  License: Zlib/libpng
+- **OpenGL Function Loader:** GLAD  
+  License: MIT
+- **Shader Management and Rendering:** Custom implementations based on LearnOpenGL references
 
-## Testing Summary
+### User Interface
+- **UI Framework:** ImGui – real-time interface for robot control and lighting  
+  License: MIT
+
+### 3D Modeling and Texturing
+- **3D Modeling Tool:** Blender – used to create and export all 3D models in `.obj` format
+- **Texture Editing:** Krita and GIMP – for preparing texture images and maps
+- **Model Loader:** TinyObjLoader – for loading .obj files into OpenGL  
+  License: MIT
+- **Image Loader:** stb_image – header-only library for texture loading  
+  License: Public Domain
+
+### Diagram and Documentation
+- **Diagram Design:** Canva – used to create architecture and UML diagrams
+- **Documentation Format:** Markdown (README.md) with embedded visuals
+
+### Development Environment
+- **IDE:** Visual Studio 2022
+- **Operating System:** Windows 10
+- **Version Control:** Git (local) & GitHub (remote repository)
+
+### External Code References
+- Initialization, shader handling, and camera system partially adapted from:
+  - [LearnOpenGL](https://learnopengl.com/)
+  - [ImGui Examples](https://github.com/ocornut/imgui/tree/master/examples)
+  - Open-source OpenGL boilerplate projects on GitHub (acknowledged in repository)
+
+# Testing Summary
 
 ### Functional Testing
 
@@ -194,9 +223,8 @@ virtual-adana-museum-v2-team-7/
 #### User Interface
 - ImGui-based interface elements (sliders, buttons, dropdowns) were tested for responsiveness. All inputs registered within 1 frame (approx. 16ms at 60 FPS).
 - Three test users (with no prior experience) were able to:
-  - Move the robot: within 30 seconds  
-  - Toggle lights: within 1 minute  
   - Complete one full scanning cycle: within 10-15 seconds
+  - The time it takes to complete a full tour (scanning all 5 objects) in auto mode: within 1 minute and 2 seconds
 
 #### Scanning Workflow
 - Manual scanning rejected 100% of invalid attempts (robot too far or not facing the object).
