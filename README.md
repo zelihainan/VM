@@ -247,15 +247,6 @@ virtual-adana-museum-v2-team-7/
 
 ---
 
-### Licensing and Compliance
-
-- All assets (models, textures) were created manually by the team using Blender, GIMP, and Krita.
-- No AI-generated or commercial content used.
-- Project complies with open-source software usage:
-  - **GLAD** – MIT License  
-  - **GLFW** – Zlib/libpng License  
-  - **ImGui** – MIT License
-
 # Team Contributions
 
 **Yunus Emre Erten (2021556030):**  
