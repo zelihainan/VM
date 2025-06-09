@@ -30,36 +30,68 @@ The project was completed by the following students from Çukurova University, C
 
 # Project Directory Structure
 
-virtual-museum/  
-├── models/               → Blender-exported 3D object files  
-├── textures/             → Custom texture images  
-├── shaders/              → Vertex and fragment shaders  
-├── src/                  → C++ source code  
-├── includes/             → Header files  
-├── docs/                 → Diagrams and documentation  
+virtual-adana-museum-v2-team-7/
+├── assets/
+  ├── models/             → 3D object files  
+  ├── font/ 
+├── assets/ 
+├── Libraries/  
+  ├── include/            
+  ├── lib/
+  ├── imgui/ 
+├── docs/                 → Diagrams  
 └── README.md             → This documentation file
 
 # Functional Features
 
-- A complete 3D museum room built in OpenGL
-- Five unique museum artifacts modeled in Blender
-- Realistic lighting setup with a global light and five object-specific spotlights
-- A mobile robot capable of navigating the room
-- Scanning system that displays popup information for each artifact
-- User interface allowing:
-  - Manual or automatic robot control
-  - Lighting toggle for each spotlight
-  - Object scanning and information display
-  - Return-to-start functionality
+## 1. Interactive 3D Museum Room Environment
+- A complete 3D museum room is implemented using OpenGL 3.3 Core Profile.
+- The environment includes textured walls and floors, with proper projection and view matrix configurations.
+- Depth testing and back-face culling are enabled for realistic 3D rendering.
+- Camera controls support multiple viewing modes including free navigation, robot follow view, and scanner view.
+
+## 2. Five Unique Artifacts Modeled in Blender
+- Five distinct 3D models were created in Blender and exported as .obj files along with .mtl and .png texture files.
+- The models are dynamically loaded using TinyObjLoader and rendered with full texture and normal support.
+- Each artifact is placed in a fixed position within the scene using individual transformation matrices.
+
+## 3. Realistic Lighting System
+- A global directional light provides base illumination for the room.
+- Each artifact is illuminated by a separate spotlight with configurable properties (direction, cutoff angle, attenuation).
+- Lighting is implemented in the fragment shader using the Phong lighting model.
+- Spotlight activation is dynamic and can change based on robot interaction.
+
+## 4. Autonomous and Manual Robot Navigation
+- A robot model created in Blender is integrated into the scene and can navigate through the environment.
+- The robot supports both manual control using keyboard (WASD) and automatic movement along a predefined path.
+- Movement and orientation are handled using transformation matrices.
+- Collision detection prevents the robot from passing through walls or overlapping with artifacts.
+- The robot's scale and speed are calibrated for proportional and realistic movement.
+
+## 5. Artifact Scanning and Popup Info Display
+- When the robot approaches an artifact within a certain range and angle, a scanning sequence is triggered.
+- A red laser beam is rendered from the robot arm to the artifact using GL_LINES.
+- After a successful scan, a popup window displays artifact information such as name, description, and origin.
+- The scanning process is proximity-based and depends on both distance and orientation to the target.
+
+## 6. Graphical User Interface with ImGui
+- The application integrates ImGui to provide a responsive and user-friendly interface.
+- The UI offers the following functionalities:
+  - Toggle between Manual and Auto movement modes.
+  - Enable or disable individual spotlights for each artifact.
+  - Trigger scan operation manually if conditions are met.
+  - Display or hide popup information windows.
+  - Return the robot to its initial spawn location with one click.
+- The user interface updates in real-time and is rendered within the OpenGL context.
 
 # Installation and Execution Instructions
 
 1. Clone the repository:
 
-git clone https://github.com/yourusername/virtual-museum.git
-cd virtual-museum
+git clone [ https://github.com/yuemco/virtual-adana-museum-v2-team-7.git](https://github.com/yuemco/virtual-adana-museum-v2-team-7.git)
+cd virtual-adana-museum-v2-team-7
 
-2. Open the `virtual-museum.sln` file using Visual Studio 2022.
+2. Open the `virtual-adana-museum-v2-team-7.sln` file using Visual Studio 2022.
 
 3. Make sure the following libraries are linked properly in the project:
    - GLAD
@@ -75,15 +107,49 @@ cd virtual-museum
 
 - W / A / S / D: Move the robot manually
 - E / Q: Rotate the robot manually
-- Mouse Movement: Rotate the camera  
+- Mouse Movement: Rotate the camera
+- Shift + Mouse Movement: Panning 
 - Scroll: Zoom in/out  
 
 **ImGui User Interface:**
 
-- Auto Scan: Robot visits and scans all objects sequentially  
-- Manual Scan: User moves the robot and scans manually  
-- Light Toggles: Turn on/off spotlights for each object  
-- Return Home: Return robot to initial position  
+## Control Panel Overview
+
+This interface provides a comprehensive control panel for interacting with a robot and its environment in a 3D simulation environment. The panel is divided into three main sections: Robot Controls, Light Settings, and Camera Settings.
+
+---
+
+### Robot Controls
+
+- **Auto Mode Checkbox**  
+  Enables or disables autonomous movement mode. When checked, the robot moves and performs actions without manual input.
+
+- **Manual Movement Buttons**  
+  - `Left`, `Right`, `Forward`, `Back`: Manually moves the robot in the respective direction.
+  - `Rotate Left (Q)`, `Rotate Right (E)`: Rotates the robot on its vertical axis using keyboard shortcuts or button clicks.
+
+- **Arm Angle Slider**  
+  A horizontal slider that controls the vertical angle of the robot’s arm. The value ranges from 0.000 to a maximum defined in the implementation (e.g., 1.000). This simulates scanning or grabbing motions.
+
+---
+
+### Light Settings
+
+- **Light 1 Intensity / Light 2 Intensity / Main Light Intensity**  
+  These sliders adjust the brightness level of the corresponding light sources in the scene. The values are floating-point numbers between 0.000 (off) and 1.000 (maximum intensity).
+
+- **Light 1 Color / Light 2 Color / Main Light Color**  
+  These buttons open a color picker to select the RGB color of each light source. This allows dynamic adjustment of the visual environment and scene ambiance.
+
+---
+
+### Camera Settings
+
+- **Camera Mode Dropdown**  
+  Allows switching between different camera perspectives:
+  - `Free`: The user can freely navigate the camera in the scene.
+  - `Follow`: The camera automatically follows the robot from a third-person perspective.
+  - `Scanner`: Switches to a close-up or fixed camera view intended for detailed object scanning.
 
 
 # Software Architecture and Diagrams
