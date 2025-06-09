@@ -90,8 +90,9 @@ virtual-adana-museum-v2-team-7/
 
 1. Clone the repository:
 
-git clone [ https://github.com/yuemco/virtual-adana-museum-v2-team-7.git](https://github.com/yuemco/virtual-adana-museum-v2-team-7.git)
-cd virtual-adana-museum-v2-team-7
+- git clone [ https://github.com/yuemco/virtual-adana-museum-v2-team-7.git](https://github.com/yuemco/virtual-adana-museum-v2-team-7.git)
+
+- cd virtual-adana-museum-v2-team-7
 
 2. Open the `virtual-adana-museum-v2-team-7.sln` file using Visual Studio 2022.
 
@@ -113,12 +114,8 @@ cd virtual-adana-museum-v2-team-7
 - Shift + Mouse Movement: Panning 
 - Scroll: Zoom in/out  
 
-**ImGui User Interface:**
 
 ## Control Panel Overview
-
-This interface provides a comprehensive control panel for interacting with a robot and its environment in a 3D simulation environment. The panel is divided into three main sections: Robot Controls, Light Settings, and Camera Settings.
-
 ---
 
 ### Robot Controls
