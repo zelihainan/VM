@@ -50,7 +50,7 @@ public:
 
 
         shader.setMat4("model", armMat);
-        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), false);
+        glUniform1i(glGetUniformLocation(shader.ID, "useTexture"), true);
         glUniform3f(glGetUniformLocation(shader.ID, "objectColor"), 0.6f, 0.6f, 0.6f);
         arm.Draw(shader);
     }
