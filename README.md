@@ -31,16 +31,7 @@ The project was completed by the following students from Çukurova University, C
 # Project Directory Structure
 
 virtual-adana-museum-v2-team-7/
-├── assets/
-  ├── models/             → 3D object files  
-  ├── font/ 
-├── assets/ 
-├── Libraries/  
-  ├── include/            
-  ├── lib/
-  ├── imgui/ 
-├── docs/                 → Diagrams  
-└── README.md             → This documentation file
+<pre lang="md"><code>```txt virtual-adana-museum-v2-team-7/ ├── assets/ │ ├── models/ → 3D object files │ ├── font/ ├── Libraries/ │ ├── include/ │ ├── lib/ │ ├── imgui/ ├── docs/ → Diagrams └── README.md → This documentation file ```</code></pre> 
 
 # Functional Features
 
