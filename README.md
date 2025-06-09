@@ -8,8 +8,6 @@
 
 # Project Overview
 
-# Project Overview
-
 Virtual Museum is an interactive 3D application developed using C++ and OpenGL 3.3, aiming to simulate a virtual museum environment. In this project, users navigate a 3D room containing five Blender-modeled artifacts using a mobile robot equipped with a scanning arm.
 
 Key features include:
