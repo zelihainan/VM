@@ -148,7 +148,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\imgui;$(ProjectDir)Libraries\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist "$(ProjectDir)assets" xcopy /E /Y /I "$(ProjectDir)assets" "$(OutDir)assets\"
