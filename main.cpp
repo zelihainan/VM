@@ -839,6 +839,7 @@ int main()
 
 
         else if (camMode == Scanner) {
+            camera.Zoom = 90.0f;
             camera.SetScannerView(robot.position, robot.rotationY);
 
         }

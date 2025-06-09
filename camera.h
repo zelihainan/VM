@@ -98,34 +98,32 @@ public:
             glm::mat4(1.0f),
             glm::radians(robotRotationY),
             glm::vec3(0, 1, 0)
-        ) * glm::vec4(0, 0, 1, 0); // Z+ yönü: robotun ileri baktýðý yön
+        ) * glm::vec4(0, 0, 1, 0);
 
-        // Daha uzak ve yukarýdan bir offset — zoom'u ortadan kaldýrýr
         glm::vec3 offset = -glm::normalize(forward) * 6.0f + glm::vec3(0.0f, 2.5f, 0.0f);
         glm::vec3 desiredPos = robotPosition + offset;
 
-        // Kamera pozisyonunu yumuþak geçiþle ayarla
         Position = glm::mix(Position, desiredPos, deltaTime * 5.0f);
 
-        // Kamera robotun merkezine baksýn
         Front = glm::normalize(robotPosition - Position);
     }
 
 
-    void SetScannerView(const glm::vec3& robotPos, float robotRotY) {
-        glm::vec3 headOffset = glm::vec3(0.0f, 1.8f, 0.0f);
+    void SetScannerView(const glm::vec3& robotPos, float robotRotY)
+    {
+        glm::vec3 headOffset = glm::vec3(0.0f, 1.7f, 0.0f);
+
         glm::vec3 forward = glm::rotate(
             glm::mat4(1.0f),
             glm::radians(robotRotY),
             glm::vec3(0, 1, 0)
-        ) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+        ) * glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
 
         Position = robotPos + headOffset;
 
-        glm::vec3 scanDir = glm::normalize(glm::vec3(forward.x, -0.2f, forward.z));
-        Front = scanDir;
+        glm::vec3 lookTarget = Position + glm::normalize(glm::vec3(forward.x, -0.15f, forward.z));
+        Front = glm::normalize(lookTarget - Position);
     }
-
 
 private:
     void updateCameraVectors()
