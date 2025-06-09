@@ -31,7 +31,18 @@ The project was completed by the following students from Çukurova University, C
 # Project Directory Structure
 
 virtual-adana-museum-v2-team-7/
-<pre lang="md"><code>```txt virtual-adana-museum-v2-team-7/ ├── assets/ │ ├── models/ → 3D object files │ ├── font/ ├── Libraries/ │ ├── include/ │ ├── lib/ │ ├── imgui/ ├── docs/ → Diagrams └── README.md → This documentation file ```</code></pre> 
+```txt
+virtual-adana-museum-v2-team-7/
+├── assets/
+│   ├── models/           → 3D object files  
+│   ├── font/             
+├── Libraries/  
+│   ├── include/          
+│   ├── lib/
+│   ├── imgui/ 
+├── docs/                 → Diagrams  
+└── README.md             → This documentation file
+```
 
 # Functional Features
 
@@ -158,26 +169,60 @@ This interface provides a comprehensive control panel for interacting with a rob
 # Testing Summary
 
 **Functional Testing:**  
-- Robot navigates without error and accurately triggers popups  
-- Each model loads with correct geometry and texture  
-- Lighting toggles work on per-object basis  
 
-**Usability Testing:**  
-- Interface is intuitive for controlling robot and lighting  
-- Automatic and manual scanning flows are user-friendly  
+## Robot Navigation and Scanning System
+- The robot successfully navigates the 3D museum room without encountering geometry or logical errors.
+- Manual control via keyboard input (WASD) functions with accurate position updates, respecting physical boundaries and collision constraints.
+- In automatic mode, the robot follows a predefined path, stops at each artifact, and triggers the scanning process without failure.
+- Popup information displays are conditionally activated based on proximity and orientation to the target artifact.
 
-**Performance:**  
-- Stable FPS maintained on mid-level systems  
-- Optimized shaders and model sizes for real-time rendering  
+## 3D Model Integrity
+- All five 3D artifacts load correctly using TinyObjLoader.
+- Geometry (vertices, normals, and faces) are preserved during export from Blender and load with no deformation.
+- Textures mapped via UV coordinates are applied correctly and rendered without visual glitches or misalignment.
+
+## Lighting Control Functionality
+- Each artifact has its own associated spotlight, which can be toggled independently through the ImGui interface.
+- Light properties such as intensity and cutoff angles remain consistent during runtime, and toggling one light does not affect others.
+- The global directional light provides uniform base lighting and does not interfere with spotlight visibility.
+
+# Usability Testing
+
+## User Interface Interactions
+- The ImGui-based interface allows seamless interaction for controlling robot modes, lighting states, and scanning functionalities.
+- Buttons, sliders, and toggles are logically grouped and clearly labeled.
+- Users with minimal prior exposure to OpenGL interfaces can control the system intuitively within seconds.
+
+## Scanning Workflow
+- Manual scanning mode provides clear feedback: if the robot is not in range or facing the wrong direction, the scan cannot be triggered.
+- In automatic scanning mode, all steps—movement, facing, scanning, and displaying popup—are executed without requiring user input.
+- Popups are displayed in a non-obtrusive way and disappear upon user request or after scene reset.
+
+# Performance
+
+## Frame Rate and Responsiveness
+- The application maintains stable frame rates (60 FPS target) on mid-range hardware configurations (e.g., GTX 1650, 8GB RAM).
+- No major frame drops observed during camera transitions, UI updates, or while rendering multiple light sources simultaneously.
+
+## Optimizations
+- Shader programs are compiled once and reused across the rendering pipeline to minimize overhead.
+- 3D models are simplified and optimized during Blender export to reduce polygon count while retaining visual quality.
+- Texture resolution is balanced to achieve visual fidelity without consuming excessive GPU memory.
 
 # Licensing and Compliance
 
-- All 3D models and texture images were created from scratch by the project team.  
-- No external models or commercial textures were used.  
-- Open-source libraries included:  
-  - GLAD (MIT License)  
-  - GLFW (Zlib License)  
-  - ImGui (MIT License)
+- All 3D models, textures, and materials used in the project were custom-made by the team members using Blender and GIMP/Krita.
+- No copyrighted, commercial, or AI-generated assets were used in the production of this application.
+- The project adheres to open-source software licensing standards and includes the following third-party libraries:
+
+  - GLAD - Used for loading OpenGL function pointers.  
+    - License: MIT License  
+  - GLFW - Provides context/window creation and input handling.  
+    - License: Zlib/libpng License  
+  - ImGui - Used to build the real-time graphical user interface.  
+    - License: MIT License
+
+- Full license texts are included in the third_party_licenses/ directory of the repository for transparency and compliance.
 
 # Team Contributions
 
