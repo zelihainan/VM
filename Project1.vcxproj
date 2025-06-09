@@ -193,11 +193,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\imconfig.h" />
-    <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\imgui.h" />
-    <ClInclude Include="..\..\..\Desktop\imgui-master\imgui-master\imgui_internal.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />
     <ClInclude Include="Libraries\imgui\imgui.h" />
