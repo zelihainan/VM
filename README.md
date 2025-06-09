@@ -16,17 +16,26 @@ The project was completed by the following students from Çukurova University, C
 - Veysel Genç – 2021556031  
 - Zeliha İnan – 2021556037
 
-# Technologies Used
+# Installation and Execution Instructions
 
-- Programming Language: C++
-- Graphics Library: OpenGL 3.3 Core Profile
-- 3D Modeling: Blender
-- UI Framework: ImGui
-- Math Library: GLM
-- Context and Input: GLFW
-- Shader Management: GLAD
-- IDE: Visual Studio 2022
-- Version Control: Git, GitHub
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yuemco/virtual-adana-museum-v2-team-7.git
+cd virtual-adana-museum-v2-team-7
+```
+
+- cd virtual-adana-museum-v2-team-7
+
+2. Open the `virtual-adana-museum-v2-team-7.sln` file using Visual Studio 2022.
+
+3. Make sure the following libraries are linked properly in the project:
+   - GLAD
+   - GLFW
+   - GLM
+   - ImGui
+
+4. Set the build configuration to `Debug x64` and run the project. 
 
 # Project Directory Structure
 
@@ -43,6 +52,62 @@ virtual-adana-museum-v2-team-7/
 ├── docs/                 → Diagrams  
 └── README.md             → This documentation file
 ```
+
+# Controls
+
+**Keyboard:**
+
+- W / A / S / D: Move the robot manually
+- E / Q: Rotate the robot manually
+- Mouse Movement: Rotate the camera
+- Shift + Mouse Movement: Panning 
+- Scroll: Zoom in/out  
+
+## Control Panel Overview
+---
+
+### Robot Controls
+
+- **Auto Mode Checkbox**  
+  Enables or disables autonomous movement mode. When checked, the robot moves and performs actions without manual input.
+
+- **Manual Movement Buttons**  
+  - `Left`, `Right`, `Forward`, `Back`: Manually moves the robot in the respective direction.
+  - `Rotate Left (Q)`, `Rotate Right (E)`: Rotates the robot on its vertical axis using keyboard shortcuts or button clicks.
+
+- **Arm Angle Slider**  
+  A horizontal slider that controls the vertical angle of the robot’s arm. The value ranges from 0.000 to a maximum defined in the implementation (e.g., 1.000). This simulates scanning or grabbing motions.
+
+---
+
+### Light Settings
+
+- **Light 1 Intensity / Light 2 Intensity / Main Light Intensity**  
+  These sliders adjust the brightness level of the corresponding light sources in the scene. The values are floating-point numbers between 0.000 (off) and 1.000 (maximum intensity).
+
+- **Light 1 Color / Light 2 Color / Main Light Color**  
+  These buttons open a color picker to select the RGB color of each light source. This allows dynamic adjustment of the visual environment and scene ambiance.
+
+---
+
+### Camera Settings
+
+- **Camera Mode Dropdown**  
+  Allows switching between different camera perspectives:
+  - `Free`: The user can freely navigate the camera in the scene.
+  - `Follow`: The camera automatically follows the robot from a third-person perspective.
+  - `Scanner`: Switches to a close-up or fixed camera view intended for detailed object scanning.
+
+# Software Architecture and Diagrams
+
+**Class Diagram:**  
+![class_diagram](https://github.com/user-attachments/assets/ab297831-23d5-4aeb-899e-c10314c32227)
+
+**Software Architecture Diagram:**  
+![sa_diagram](https://github.com/user-attachments/assets/cc6d3099-8603-4ad9-bc90-6aacc1af4ade)
+
+**Method Descriptions:**  
+![Method Descriptions_1 pdf](https://github.com/user-attachments/assets/76848dd8-cf69-4f4a-bf37-208709d0776f)
 
 # Functional Features
 
@@ -86,82 +151,17 @@ virtual-adana-museum-v2-team-7/
   - Return the robot to its initial spawn location with one click.
 - The user interface updates in real-time and is rendered within the OpenGL context.
 
-# Installation and Execution Instructions
+  # Technologies Used
 
-1. Clone the repository:
-
-- git clone [ https://github.com/yuemco/virtual-adana-museum-v2-team-7.git](https://github.com/yuemco/virtual-adana-museum-v2-team-7.git)
-
-- cd virtual-adana-museum-v2-team-7
-
-2. Open the `virtual-adana-museum-v2-team-7.sln` file using Visual Studio 2022.
-
-3. Make sure the following libraries are linked properly in the project:
-   - GLAD
-   - GLFW
-   - GLM
-   - ImGui
-
-4. Set the build configuration to `Debug x64` and run the project. 
-
-# Controls
-
-**Keyboard:**
-
-- W / A / S / D: Move the robot manually
-- E / Q: Rotate the robot manually
-- Mouse Movement: Rotate the camera
-- Shift + Mouse Movement: Panning 
-- Scroll: Zoom in/out  
-
-
-## Control Panel Overview
----
-
-### Robot Controls
-
-- **Auto Mode Checkbox**  
-  Enables or disables autonomous movement mode. When checked, the robot moves and performs actions without manual input.
-
-- **Manual Movement Buttons**  
-  - `Left`, `Right`, `Forward`, `Back`: Manually moves the robot in the respective direction.
-  - `Rotate Left (Q)`, `Rotate Right (E)`: Rotates the robot on its vertical axis using keyboard shortcuts or button clicks.
-
-- **Arm Angle Slider**  
-  A horizontal slider that controls the vertical angle of the robot’s arm. The value ranges from 0.000 to a maximum defined in the implementation (e.g., 1.000). This simulates scanning or grabbing motions.
-
----
-
-### Light Settings
-
-- **Light 1 Intensity / Light 2 Intensity / Main Light Intensity**  
-  These sliders adjust the brightness level of the corresponding light sources in the scene. The values are floating-point numbers between 0.000 (off) and 1.000 (maximum intensity).
-
-- **Light 1 Color / Light 2 Color / Main Light Color**  
-  These buttons open a color picker to select the RGB color of each light source. This allows dynamic adjustment of the visual environment and scene ambiance.
-
----
-
-### Camera Settings
-
-- **Camera Mode Dropdown**  
-  Allows switching between different camera perspectives:
-  - `Free`: The user can freely navigate the camera in the scene.
-  - `Follow`: The camera automatically follows the robot from a third-person perspective.
-  - `Scanner`: Switches to a close-up or fixed camera view intended for detailed object scanning.
-
-
-# Software Architecture and Diagrams
-
-**Class Diagram:**  
-![class_diagram](https://github.com/user-attachments/assets/ab297831-23d5-4aeb-899e-c10314c32227)
-
-**Software Architecture Diagram:**  
-![sa_diagram](https://github.com/user-attachments/assets/cc6d3099-8603-4ad9-bc90-6aacc1af4ade)
-
-**Method Descriptions:**  
-![Method Descriptions_1 pdf](https://github.com/user-attachments/assets/76848dd8-cf69-4f4a-bf37-208709d0776f)
-
+- Programming Language: C++
+- Graphics Library: OpenGL 3.3 Core Profile
+- 3D Modeling: Blender
+- UI Framework: ImGui
+- Math Library: GLM
+- Context and Input: GLFW
+- Shader Management: GLAD
+- IDE: Visual Studio 2022
+- Version Control: Git, GitHub
 
 # Testing Summary
 
@@ -218,8 +218,6 @@ virtual-adana-museum-v2-team-7/
     - License: Zlib/libpng License  
   - ImGui - Used to build the real-time graphical user interface.  
     - License: MIT License
-
-- Full license texts are included in the third_party_licenses/ directory of the repository for transparency and compliance.
 
 # Team Contributions
 
