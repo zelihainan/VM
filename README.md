@@ -8,29 +8,19 @@
 
 # Project Overview
 
-The Virtual Museum is an interactive computer graphics application designed and developed using C++ and OpenGL 3.3 Core Profile. The primary objective of this project is to create a fully navigable and immersive virtual museum space where users can explore and interact with digitally modeled cultural artifacts using a robotic assistant.
+Virtual Museum is an interactive 3D application developed using C++ and OpenGL 3.3, aiming to simulate a virtual museum environment. In this project, users navigate a 3D room containing five Blender-modeled artifacts using a mobile robot equipped with a scanning arm.
 
-The system simulates a virtual museum room rendered in real-time 3D, containing five distinct artifacts created in Blender. These models are displayed within a controlled lighting environment consisting of one global directional light and five independently controlled spotlights—each assigned to an artifact.
+Key features include:
+- Realistic lighting (one global light and five artifact-specific spotlights)
+- Manual and automatic robot navigation
+- Scanning system with pop-up information displays
+- ImGui-based user interface for robot and lighting control
 
-A central feature of the application is a mobile robot, which can be manually or automatically navigated throughout the scene. The robot is equipped with a scanning arm and a laser system, allowing it to detect artifacts, trigger pop-up information displays, and interact with lighting dynamically. This scanning process is proximity- and orientation-based, ensuring that interaction with the models feels natural and context-aware.
+The project was developed as part of a computer graphics course by students from Çukurova University, Computer Engineering Department:
 
-To enhance usability, the project integrates Dear ImGui as its user interface system. This allows users to:
-- Toggle between manual and automatic robot movement modes.
-- Control individual spotlight visibility.
-- Trigger artifact scanning and display corresponding metadata.
-- Reset the robot to its starting position.
-
-The Virtual Museum provides a realistic and educational experience, suitable for applications such as virtual exhibitions, robotics simulation, and 3D UI experimentation. The software architecture is modular and extensible, allowing for future integration of additional features such as camera paths, model metadata databases, or extended scene interaction.
-
----
-
-## Development Team
-
-This project was developed as part of an academic course assignment by students from Çukurova University, Department of Computer Engineering:
-
-- Yunus Emre Erten – Student ID: 2021556030  
-- Veysel Genç – Student ID: 2021556031  
-- Zeliha İnan – Student ID: 2021556037
+- Yunus Emre Erten – 2021556030  
+- Veysel Genç – 2021556031  
+- Zeliha İnan – 2021556037
 
 All models, textures, and source code were created and implemented by the team from scratch, adhering to open-source software principles and academic integrity standards.
 
