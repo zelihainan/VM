@@ -59,7 +59,7 @@ virtual-adana-museum-v2-team-7/
 ├── Project1.vcxproj
 ├── Project1.vcxproj.filters
 ├── Project1.vcxproj.user
-├── README.md             → This documentation file
+├── README.md             
 ```
 
 # Controls
@@ -84,8 +84,12 @@ virtual-adana-museum-v2-team-7/
   - `Rotate Left (Q)`, `Rotate Right (E)`: Rotates the robot on its vertical axis using keyboard shortcuts or button clicks.
 
 - **Arm Angle Slider**  
-  A horizontal slider that controls the vertical angle of the robot’s arm. The value ranges from 0.000 to a maximum defined in the implementation (e.g., 1.000). This simulates scanning or grabbing motions.
 
+- A horizontal slider in the user interface allows control over the vertical angle of the robot’s arm.
+- The slider value ranges from 0.000 to 1.000, which is internally mapped to an actual angle between 0° and 100°.
+- When the arm angle is within the range of 60° to 100°, the robot is allowed to perform a scanning operation. 
+- If the arm angle is below 60°, scanning is disabled, simulating a lowered or idle arm position.
+- This mechanism enhances the realism of the robot’s behavior by explicitly requiring the arm to be raised before initiating a scan.
 ---
 
 ### Light Settings
@@ -104,17 +108,16 @@ virtual-adana-museum-v2-team-7/
   Allows switching between different camera perspectives:
   - `Free`: The user can freely navigate the camera in the scene.
   - `Follow`: The camera automatically follows the robot from a third-person perspective.
-  - `Scanner`: Switches to a close-up or fixed camera view intended for detailed object scanning.
+  - `Scanner`: Switches from a close-up (from the robot's perspective) to a fixed camera view for detailed object scanning.
 
-# Software Architecture and Diagrams
-
-**Class Diagram:**  
-![class_diagram](https://github.com/user-attachments/assets/ab297831-23d5-4aeb-899e-c10314c32227)
-
-**Software Architecture Diagram:**  
+# Visual Design Documentation
+### Software Architecture
 ![sa_diagram](https://github.com/user-attachments/assets/cc6d3099-8603-4ad9-bc90-6aacc1af4ade)
 
-**Method Descriptions:**  
+### Class Diagram
+![class_diagram](https://github.com/user-attachments/assets/ab297831-23d5-4aeb-899e-c10314c32227)
+
+### Method Descriptions
 ![Method Descriptions_1 pdf](https://github.com/user-attachments/assets/76848dd8-cf69-4f4a-bf37-208709d0776f)
 
 # Functional Features
