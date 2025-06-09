@@ -46,7 +46,6 @@ git clone https://github.com/yuemco/virtual-adana-museum-v2-team-7.git
 
 # Project Directory Structure
 
-virtual-adana-museum-v2-team-7/
 ```txt
 virtual-adana-museum-v2-team-7/
 ├── assets/               → Models and textures
@@ -74,7 +73,6 @@ virtual-adana-museum-v2-team-7/
 - Scroll: Zoom in/out  
 
 ## Control Panel Overview
----
 
 ### Robot Controls
 
@@ -133,10 +131,11 @@ virtual-adana-museum-v2-team-7/
 - Each artifact is placed in a fixed position within the scene using individual transformation matrices.
 
 ## 3. Realistic Lighting System
-- A global directional light provides base illumination for the room.
-- Each artifact is illuminated by a separate spotlight with configurable properties (direction, cutoff angle, attenuation).
-- Lighting is implemented in the fragment shader using the Phong lighting model.
-- Spotlight activation is dynamic and can change based on robot interaction.
+- A main directional light positioned above the scene provides uniform base illumination simulating sunlight or overhead lighting.
+- Two point lights, located on the sides of the room, contribute to ambient lighting by emitting light in all directions within a limited radius.
+- Each of the five artifacts is illuminated by a dedicated spotlight with adjustable parameters (direction, cutoff angle, and attenuation).
+- All lighting computations are implemented in the fragment shader using the Phong lighting model (ambient, diffuse, specular).
+- Spotlights can be dynamically toggled through the user interface and respond to robot proximity during scanning interactions.
 
 ## 4. Autonomous and Manual Robot Navigation
 - A robot model created in Blender is integrated into the scene and can navigate through the environment.
