@@ -83,11 +83,7 @@ virtual-adana-museum-v2-team-7/
 
 - **Arm Angle Slider**  
 
-- A horizontal slider in the user interface allows control over the vertical angle of the robot’s arm.
-- The slider value ranges from 0.000 to 1.000, which is internally mapped to an actual angle between 0° and 100°.
-- When the arm angle is within the range of 60° to 100°, the robot is allowed to perform a scanning operation. 
-- If the arm angle is below 60°, scanning is disabled, simulating a lowered or idle arm position.
-- This mechanism enhances the realism of the robot’s behavior by explicitly requiring the arm to be raised before initiating a scan.
+  A horizontal slider in the user interface allows control over the vertical angle of the robot’s arm. The slider value ranges from 0.000 to 1.000, which is internally mapped to an actual angle between 0° and 100°. When the arm angle is within the range of 60° to 100°, the robot is allowed to perform a scanning operation. If the arm angle is below 60°, scanning is disabled, simulating a lowered or idle arm position. This mechanism enhances the realism of the robot’s behavior by explicitly requiring the arm to be raised before initiating a scan.
 ---
 
 ### Light Settings
