@@ -10,19 +10,7 @@
 
 All formal documentation related to this project is organized under the `docs/` directory. This includes:
 
-**[Project Report](https://github.com/user-attachments/files/20688401/VIRTUAL.MUSEUM.REPORT.pdf)**  
-
-The complete academic report detailing the design, implementation, testing, and evaluation of the Virtual Museum system.
-
-Class Diagram  
-UML class diagram showing the system's object-oriented structure.
-
-Software Architecture  
-Software architecture diagram illustrating subsystem interactions.
-
-Method Descriptions  
-Tabulated documentation of key class methods and their responsibilities.
-
+**[Project Report](https://github.com/user-attachments/files/20688401/VIRTUAL.MUSEUM.REPORT.pdf)** , Class Diagram, Software Architecture, Method Descriptions  
 
 
 # Project Overview
