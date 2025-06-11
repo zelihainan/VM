@@ -6,6 +6,24 @@
 
 *Click the thumbnail above to watch the demonstration video.*
 
+# Documentation
+
+All formal documentation related to this project is organized under the `docs/` directory. This includes:
+
+**[Project Report](./docs/VIRTUAL MUSEUM REPORT.pdf)**  
+The complete academic report detailing the design, implementation, testing, and evaluation of the Virtual Museum system.
+
+Class Diagram  
+UML class diagram showing the system's object-oriented structure.
+
+Software Architecture  
+Software architecture diagram illustrating subsystem interactions.
+
+Method Descriptions  
+Tabulated documentation of key class methods and their responsibilities.
+
+
+
 # Project Overview
 
 Virtual Museum is an interactive 3D application developed using C++ and OpenGL 3.3, aiming to simulate a virtual museum environment. In this project, users navigate a 3D room containing five Blender-modeled artifacts using a mobile robot equipped with a scanning arm.
