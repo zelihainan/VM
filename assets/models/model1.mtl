@@ -1,12 +1,33 @@
-# Blender 4.0.0 MTL File: 'None'
-# www.blender.org
+# model1 blender mtl file
 
-newmtl Material.001
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
+newmtl mat0
+Ns 500
+Ka 1.0 1.0 1.0
+Kd 0.80091 0.03644 0.01022
+Ks 0.5 0.5 0.5
+Ke 0.0 0.0 0.0
+Ni 1.0
+d 1
 illum 2
-map_Kd model1.png
+
+newmtl mat1
+Ns 199.99999
+Ka 1.0 1.0 1.0
+Kd 1 1 1
+Ks 0.5 0.5 0.5
+Ke 0.0 0.0 0.0
+Ni 1.0
+d 1
+illum 2
+map_Kd model1texture.jpg
+
+newmtl mat2
+Ns 250
+Ka 1.0 1.0 1.0
+Kd 0.85 0.85 0.85
+Ks 0 0 0
+Ke 0.0 0.0 0.0
+Ni 1.0
+d 1
+illum 1
+
