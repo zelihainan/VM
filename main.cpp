@@ -347,7 +347,7 @@ int main()
     font_cfg.OversampleV = 1;
     font_cfg.PixelSnapH = true;
 
-    std::string fontPath = getExecutableDir() + std::string("/../../assets/fonts/OpenSans-Regular.ttf");
+    std::string fontPath = getExecutableDir() + std::string("/../../assets/font/OpenSans-Regular.ttf");
     io.FontDefault = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f, &font_cfg, turkish_range);
 
 
