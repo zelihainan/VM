@@ -401,12 +401,13 @@ int main()
     static int lastScannedIndex = -1;
 
     std::vector<glm::vec3> spotlightPositions = {
-    glm::vec3(-6.0f, 3.0f, 0.0f),
-    glm::vec3(-3.0f, 3.0f, 0.0f),
-    glm::vec3(0.0f, 3.0f, 0.0f),
-    glm::vec3(3.0f, 3.0f, 0.0f),
-    glm::vec3(6.0f, 3.0f, 0.0f)
+        glm::vec3(-6.0f, 4.0f, 0.0f),
+        glm::vec3(-3.0f, 4.0f, 0.0f),
+        glm::vec3(0.0f, 4.0f, 0.0f),
+        glm::vec3(3.0f, 4.0f, 0.0f),
+        glm::vec3(6.0f, 4.0f, 0.0f)
     };
+
 
     std::vector<glm::vec3> pointLights = {
     glm::vec3(-9.0f, 1.0f, 4.0f),   
@@ -816,7 +817,10 @@ int main()
 
         for (int i = 0; i < objectPositions.size(); ++i) {
             if (i == scannedModelIndex && lightActive) {
-                intensities[i] = 2.5f;
+                if (i == 1 || i == 4)  
+                    intensities[i] = 0.5f; 
+                else
+                    intensities[i] = 2.5f;
             }
             else {
                 intensities[i] = 0.2f;
