@@ -10,7 +10,8 @@
 
 All formal documentation related to this project is organized under the `docs/` directory. This includes:
 
-**[Project Report](./docs/VIRTUAL MUSEUM REPORT.pdf)**  
+**[Project Report][VIRTUAL MUSEUM REPORT.pdf](https://github.com/user-attachments/files/20688401/VIRTUAL.MUSEUM.REPORT.pdf)**  
+
 The complete academic report detailing the design, implementation, testing, and evaluation of the Virtual Museum system.
 
 Class Diagram  
