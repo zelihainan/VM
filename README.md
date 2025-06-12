@@ -121,6 +121,13 @@ virtual-adana-museum-v2-team-7/
 ### Method Descriptions
 ![Method Descriptions_1 pdf](https://github.com/user-attachments/assets/76848dd8-cf69-4f4a-bf37-208709d0776f)
 
+# 3D Models Previews
+![](/docs/3dmodels-previews/model1preview.gif)
+![](/docs/3dmodels-previews/model2preview.gif)
+![](/docs/3dmodels-previews/model3preview.gif)
+![](/docs/3dmodels-previews/model4preview.gif)
+![](/docs/3dmodels-previews/model5preview.gif)
+
 # Functional Features
 
 ## 1. Interactive 3D Museum Room Environment
